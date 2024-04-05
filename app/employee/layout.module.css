@@ -1,0 +1,10 @@
+@media (max-width: 965px) {
+  .sidebarContainer {
+    width: 50% !important;
+    flex-shrink: 0;
+  }
+  .mainContainer{
+    /* width: 70%; */
+    flex-shrink: 0;
+  }
+}

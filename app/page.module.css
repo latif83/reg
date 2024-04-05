@@ -1,0 +1,54 @@
+.btn{
+    width: 40%;
+    display: block;
+}
+
+.activeBtn{
+    width: 60%;
+    display: block;
+}
+
+.banner{
+    background-image: url("https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp");
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* background-position: center; */
+    background-blend-mode: soft-light;
+}
+
+.banner::after{
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #1d4ed8;
+    background-image: url("https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: right;
+    background-blend-mode: soft-light;
+    /* z-index: 999; */
+}
+
+.marquee {
+    white-space: nowrap;
+    overflow: hidden;
+    animation: marquee 15s linear infinite;
+  }
+  
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  
+
+  @media(max-width:500px){
+    .banner{
+        background-position: top;
+    }
+    .banner::after{
+        display: none;
+    }
+  }
