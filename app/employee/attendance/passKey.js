@@ -8,14 +8,17 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-export const PassKey = ({ setAuthenticate }) => {
+export const PassKey = ({ setAuthenticate,setAuthDone }) => {
   const [loading, setLoading] = useState(false);
 
   const [usePassword, setUsePassword] = useState(false);
   const [useFingerprint, setUseFingerprint] = useState(false);
 
   const [pickAuthChoice, setPickAuthChoice] = useState(true);
+
+  const [enteredPassword, setEnteredPassword] = useState("");
 
   useEffect(() => {
     const fingerPrintAuth = async () => {
@@ -40,6 +43,52 @@ export const PassKey = ({ setAuthenticate }) => {
       fingerPrintAuth();
     }
   }, [useFingerprint]);
+
+  const [sData, setSData] = useState(false);
+
+  const submit = () => {
+    setSData(true);
+  };
+
+  useEffect(() => {
+
+    const authenticateUser = async () => {
+      try {
+        setLoading(true);
+
+        const data = {
+          password: enteredPassword,
+        };
+
+        const response = await fetch("/api/login/authwithpassword", {
+          method: "POST",
+          body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        setLoading(false);
+
+        if (!response.ok) {
+          toast.error(responseData.error);
+          return;
+        }
+
+        toast.success(responseData.message);
+        setAuthDone(true)
+        setAuthenticate(false)
+      } catch (err) {
+        console.log(err);
+        toast.error("Unexpected Error, Please try again later!");
+      }
+    };
+
+    if (sData) {
+      authenticateUser();
+      setSData(false);
+    }
+    
+  }, [sData]);
 
   return (
     <div className={`${styles.container} flex items-center justify-center`}>
@@ -89,7 +138,7 @@ export const PassKey = ({ setAuthenticate }) => {
         )}
 
         {usePassword && (
-          <form>
+          <form action={submit}>
             <div className="relative z-0 w-full group">
               <input
                 type="password"
@@ -98,6 +147,8 @@ export const PassKey = ({ setAuthenticate }) => {
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
+                value={enteredPassword}
+                onChange={(e) => setEnteredPassword(e.target.value)}
               />
               <label
                 htmlFor="password"

@@ -23,17 +23,19 @@ model employees {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  department departments @relation(fields: [deptId], references: [id])
+  department departments  @relation(fields: [deptId], references: [id])
+  attendance attendance[]
 }
 
 // admins model
 model admins {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String           @id @default(cuid())
+  email          String           @unique
+  password       String
+  name           String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  attendanceCode attendanceCode[]
 }
 
 // departments model
@@ -44,4 +46,31 @@ model departments {
   updatedAt DateTime @updatedAt
 
   employees employees[]
+}
+
+// Attendance model
+model attendance {
+  id         String    @id @default(cuid())
+  date       DateTime  @default(now())
+  employeeId String
+  clockIn    DateTime
+  clockOut   DateTime?
+  breakStart DateTime?
+  breakEnd   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Define relation to employees model
+  employee employees @relation(fields: [employeeId], references: [id])
+}
+
+// Attendance code model
+model attendanceCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  createdById String
+
+  createdBy admins @relation(fields: [createdById], references: [id])
 }

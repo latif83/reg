@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { AttendanceHistory } from "./history";
 import { PassKey } from "./passKey";
+import { QRAuth } from "./qrAuth";
 
 export default function Attendance() {
   // State to hold the current time
@@ -33,18 +34,32 @@ export default function Attendance() {
     return () => clearInterval(interval);
   }, []);
 
-  const [authenticate,setAuthenticate] = useState(false)
+  const [authenticate, setAuthenticate] = useState(false);
+  const [authDone, setAuthDone] = useState(false);
+  const [qrAuth, setQRAuth] = useState(false);
+
+  useEffect(() => {
+    if (authDone) {
+      setQRAuth(true);
+    }
+  }, [authDone]);
 
   return (
     <div>
-      {authenticate && <PassKey setAuthenticate={setAuthenticate} />}
+      {authenticate && (
+        <PassKey setAuthenticate={setAuthenticate} setAuthDone={setAuthDone} />
+      )}
+      {authDone && qrAuth && <QRAuth setQRAuth={setQRAuth} qrAuth={qrAuth} setAuthDone={setAuthDone} />}
       <div className="flex flex-col justify-center items-center mt-3">
         <h1 className="text-4xl">{currentTime}</h1>
         <p>{currentDate}</p>
       </div>
       <div className="grid grid-cols-3 gap-4 mt-5">
         <div className="flex flex-col items-center gap-2 justify-center">
-          <button onClick={()=>setAuthenticate(true)} className="shadow-lg shadow-blue-500/50 hover:bg-blue-500 ease-in-out duration-500 font-medium rounded-full text-sm px-4 py-3 text-center">
+          <button
+            onClick={() => setAuthenticate(true)}
+            className="shadow-lg shadow-blue-500/50 hover:bg-blue-500 ease-in-out duration-500 font-medium rounded-full text-sm px-4 py-3 text-center"
+          >
             <FontAwesomeIcon icon={faSignIn} />
           </button>
           <span>Clock in</span>
@@ -65,10 +80,9 @@ export default function Attendance() {
         </div>
       </div>
 
-<div className="mt-5">
-<AttendanceHistory />
-</div>
-      
+      <div className="mt-5">
+        <AttendanceHistory />
+      </div>
     </div>
   );
 }
