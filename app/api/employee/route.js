@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/actions/action";
 
-// POST API to create a new department
+// POST API to create a new employee
 export async function POST(req) {
   try {
     const hasCookies = cookies().has("access-token");
@@ -17,7 +17,7 @@ export async function POST(req) {
       return NextResponse.json(
         {
           error:
-            "You're unathorized to create a department, please login to continue.",
+            "You're unauthorized to create a department, please login to continue.",
         },
         { status: 400 }
       );
@@ -54,26 +54,36 @@ export async function POST(req) {
     staffid = staffid.trim();
     address = address.trim();
 
-    // if (!deptName) {
-    //   return NextResponse.json(
-    //     { error: "Please provide the department name." },
-    //     { status: 400 }
-    //   );
-    // }
-
-    // Check if the election is already created by this user with the same staff id
-    const existingEmployee = await prisma.employees.findFirst({
+    // Check if email is unique
+    const existingEmail = await prisma.employees.findFirst({
       where: {
-        staffid: {
-          equals: staffid,
-          mode: "insensitive", // Case-sensitive comparison
+        email: {
+          equals: email,
+          mode: "insensitive", // Case-insensitive comparison
         },
       },
     });
 
-    if (existingEmployee) {
+    if (existingEmail) {
       return NextResponse.json(
-        { error: "You already have an employee with same staff Id." },
+        { error: "Email already exists." },
+        { status: 400 }
+      );
+    }
+
+    // Check if staff ID is unique
+    const existingStaffId = await prisma.employees.findFirst({
+      where: {
+        staffid: {
+          equals: staffid,
+          mode: "insensitive", // Case-insensitive comparison
+        },
+      },
+    });
+
+    if (existingStaffId) {
+      return NextResponse.json(
+        { error: "Staff ID already exists." },
         { status: 400 }
       );
     }
@@ -103,6 +113,7 @@ export async function POST(req) {
     );
   }
 }
+
 
 export async function GET() {
   try {

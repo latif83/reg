@@ -5,7 +5,7 @@ import { faD, faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export const NEmployee = ({ setAddEmployee }) => {
+export const NEmployee = ({ setAddEmployee, setGData }) => {
   const [loading, setLoading] = useState(false);
 
   const [fData, setFData] = useState(null);
@@ -72,6 +72,7 @@ export const NEmployee = ({ setAddEmployee }) => {
         }
 
         toast.success(responseData.message);
+        setGData(true)
         setAddEmployee(false);
       } catch (err) {
         console.log(err);

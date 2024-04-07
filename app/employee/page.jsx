@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { EditProfile } from "./editProfile";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function EmployeeDashboard() {
   // State to hold the current time
@@ -29,6 +31,8 @@ export default function EmployeeDashboard() {
   const [empLoading, setEmpLoading] = useState(false);
   const [gData, setGData] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
     const getEmployeeInfo = async () => {
       try {
@@ -38,6 +42,11 @@ export default function EmployeeDashboard() {
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
+
+          if (responseData?.redirect) {
+            router.push("/");
+          }
+
           return;
         }
 
@@ -62,7 +71,13 @@ export default function EmployeeDashboard() {
 
   return (
     <div>
-      {editProfile && <EditProfile setEditProfile={setEditProfile} empData={employeeInfo} />}
+      {editProfile && (
+        <EditProfile
+          setEditProfile={setEditProfile}
+          empData={employeeInfo}
+          setGData={setGData}
+        />
+      )}
       <div className="border-b pb-3 flex sm:flex-row flex-col justify-between items-center">
         <h1 className="font-bold text-xl">Employee Dashboard</h1>
         <div>
@@ -149,9 +164,12 @@ export default function EmployeeDashboard() {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6 mt-5">
-          <div className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
+          <Link
+            href="/employee/attendance"
+            className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50"
+          >
             Clock in / out
-          </div>
+          </Link>
 
           <div className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
             View Attendance History

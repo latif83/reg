@@ -49,7 +49,7 @@ export default function Employees() {
 
   return (
     <div>
-      {addEmployee && <NEmployee setAddEmployee={setAddEmployee} />}
+      {addEmployee && <NEmployee setAddEmployee={setAddEmployee} setGData={setGData} />}
       <h1>Employees</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">

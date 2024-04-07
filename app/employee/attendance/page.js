@@ -7,6 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { AttendanceHistory } from "./history";
+import { PassKey } from "./passKey";
 
 export default function Attendance() {
   // State to hold the current time
@@ -32,15 +33,18 @@ export default function Attendance() {
     return () => clearInterval(interval);
   }, []);
 
+  const [authenticate,setAuthenticate] = useState(false)
+
   return (
     <div>
+      {authenticate && <PassKey setAuthenticate={setAuthenticate} />}
       <div className="flex flex-col justify-center items-center mt-3">
         <h1 className="text-4xl">{currentTime}</h1>
         <p>{currentDate}</p>
       </div>
       <div className="grid grid-cols-3 gap-4 mt-5">
         <div className="flex flex-col items-center gap-2 justify-center">
-          <button className="shadow-lg shadow-blue-500/50 hover:bg-blue-500 ease-in-out duration-500 font-medium rounded-full text-sm px-4 py-3 text-center">
+          <button onClick={()=>setAuthenticate(true)} className="shadow-lg shadow-blue-500/50 hover:bg-blue-500 ease-in-out duration-500 font-medium rounded-full text-sm px-4 py-3 text-center">
             <FontAwesomeIcon icon={faSignIn} />
           </button>
           <span>Clock in</span>

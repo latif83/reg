@@ -5,7 +5,7 @@ import { faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export const EditProfile = ({ setEditProfile, empData }) => {
+export const EditProfile = ({ setEditProfile, empData, setGData }) => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [staffid, setStaffid] = useState("");
@@ -59,6 +59,7 @@ export const EditProfile = ({ setEditProfile, empData }) => {
 
         toast.success(responseData.message);
         setEditProfile(false);
+        setGData(true)
       } catch (err) {
         console.log(err);
         toast.error("Unexpected Error, try again!");
@@ -83,7 +84,7 @@ export const EditProfile = ({ setEditProfile, empData }) => {
             color="red"
           />
         </div>
-        <form>
+        <form action={submit}>
           <div className="grid sm:grid-cols-2 gap-4 mb-5">
             <div className="relative z-0 w-full group">
               <input
@@ -216,7 +217,7 @@ export const EditProfile = ({ setEditProfile, empData }) => {
               value={dept}
               disabled
             >
-              <option value="">Select Department</option>
+              {/* <option value="">Select Department</option> */}
               <option selected value={empData.department?.id}>
                 {empData.department?.name}
               </option>
