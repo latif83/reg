@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
+import { toast } from "react-toastify";
 
 export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone }) => {
   const [pickQRChoice, setPickQRChoice] = useState(true);
@@ -23,7 +24,52 @@ export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone }) => {
     setQRAuth(false);
   };
 
-  const submit = () => {};
+  const [sData,setSData] = useState(false)
+
+  const submit = () => {
+    setSData(true)
+  };
+
+  useEffect(()=>{
+
+    const sendAttendance = async ()=>{
+      try{
+
+        setLoading(true)
+
+        const data = {
+          attendanceCode
+        }
+
+        const response = await fetch("/api/attendance/in",{
+          method : "POST",
+          body : JSON.stringify(data)
+        })
+
+        const responseData = await response.json()
+
+        if(!response.ok){
+          setLoading(false)
+          toast.error(responseData.error)
+          return
+        }
+
+        toast.success(responseData.message)
+
+        hideQRModal()
+
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
+
+    if(sData){
+      sendAttendance()
+      setSData(false)
+    }
+
+  },[sData])
 
   return (
     <div className={`${styles.container} flex items-center justify-center`}>

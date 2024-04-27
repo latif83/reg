@@ -100,7 +100,7 @@ export default function EmployeeDashboard() {
               {empLoading ? (
                 <FontAwesomeIcon icon={faSpinner} spin />
               ) : (
-                employeeInfo.fname
+                employeeInfo?.fname
               )}
             </p>
           </div>
@@ -111,7 +111,7 @@ export default function EmployeeDashboard() {
               {empLoading ? (
                 <FontAwesomeIcon icon={faSpinner} spin />
               ) : (
-                employeeInfo.lname
+                employeeInfo?.lname
               )}
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function EmployeeDashboard() {
               {empLoading ? (
                 <FontAwesomeIcon icon={faSpinner} spin />
               ) : (
-                employeeInfo.staffid
+                employeeInfo?.staffid
               )}
             </p>
           </div>
@@ -133,7 +133,7 @@ export default function EmployeeDashboard() {
               {empLoading ? (
                 <FontAwesomeIcon icon={faSpinner} spin />
               ) : (
-                employeeInfo.department?.name
+                employeeInfo?.department?.name
               )}
             </p>
           </div>
@@ -144,7 +144,7 @@ export default function EmployeeDashboard() {
               {empLoading ? (
                 <FontAwesomeIcon icon={faSpinner} spin />
               ) : (
-                employeeInfo.address
+                employeeInfo?.address
               )}
             </p>
           </div>

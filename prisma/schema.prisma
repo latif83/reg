@@ -50,27 +50,28 @@ model departments {
 
 // Attendance model
 model attendance {
-  id         String    @id @default(cuid())
-  date       DateTime  @default(now())
-  employeeId String
-  clockIn    DateTime
-  clockOut   DateTime?
-  breakStart DateTime?
-  breakEnd   DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  employeeId       String
+  clockIn          DateTime
+  clockOut         DateTime?
+  breakStart       DateTime?
+  breakEnd         DateTime?
+  AttendanceCodeId String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   // Define relation to employees model
-  employee employees @relation(fields: [employeeId], references: [id])
+  employee       employees      @relation(fields: [employeeId], references: [id])
+  AttendanceCode attendanceCode @relation(fields: [AttendanceCodeId], references: [id])
 }
 
 // Attendance code model
 model attendanceCode {
   id          String   @id @default(cuid())
-  code        String   @unique
+  code        String
   createdAt   DateTime @default(now())
-  expiresAt   DateTime
   createdById String
 
-  createdBy admins @relation(fields: [createdById], references: [id])
+  createdBy  admins       @relation(fields: [createdById], references: [id])
+  attendance attendance[]
 }

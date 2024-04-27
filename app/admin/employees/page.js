@@ -8,9 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NEmployee } from "./nEmplyee";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { EditEmployee } from "./editEmployee";
 
 export default function Employees() {
   const [addEmployee, setAddEmployee] = useState(false);
+  const [editEmployee, setEditEmployee] = useState(false);
+  const [empData,setEmpData] = useState()
 
   const [employees, setEmployees] = useState([]);
 
@@ -50,6 +53,7 @@ export default function Employees() {
   return (
     <div>
       {addEmployee && <NEmployee setAddEmployee={setAddEmployee} setGData={setGData} />}
+      {editEmployee && <EditEmployee setEditEmployee={setEditEmployee} setGData={setGData} empData={empData} />}
       <h1>Employees</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
@@ -120,7 +124,7 @@ export default function Employees() {
           <tbody>
             {loading ? (
               <tr class="bg-white border-b hover:bg-gray-50">
-                <td colSpan={5} class="px-6 py-4 text-center">
+                <td colSpan={6} class="px-6 py-4 text-center">
                   <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                 </td>
               </tr>
@@ -142,11 +146,20 @@ export default function Employees() {
                   <td class="px-6 py-4">{employee.deptId}</td>
                   <td class="px-6 py-4">{employee.contact}</td>
                   <td class="px-6 py-4">
+                    <span
+                    onClick={()=>{
+                      setEmpData(employee)
+                      setEditEmployee(true)
+                    }}
+                      class="font-medium text-blue-600 hover:underline mr-2 cursor-pointer"
+                    >
+                      Edit
+                    </span>
                     <a
                       href="#"
-                      class="font-medium text-blue-600 hover:underline"
+                      class="font-medium text-red-600 hover:underline"
                     >
-                      Manage
+                      Delete
                     </a>
                   </td>
                 </tr>

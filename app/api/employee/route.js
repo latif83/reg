@@ -115,6 +115,132 @@ export async function POST(req) {
 }
 
 
+// PUT API to edit an existing employee
+export async function PUT(req) {
+  try {
+    const hasCookies = cookies().has("access-token");
+    let user = {};
+
+    if (!hasCookies) {
+      return NextResponse.json(
+        {
+          error:
+            "You're unauthorized to edit an employee, please login to continue.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (hasCookies) {
+      const cookie = cookies().get("access-token");
+
+      if (cookie?.value) {
+        const verificationResult = await verifyToken(cookie.value);
+
+        if (verificationResult.status) {
+          user = verificationResult.decodedToken;
+          // Now you have the user details, you can use them as needed
+          //   console.log("User details:", user);
+        } else {
+          // Handle invalid token
+          return NextResponse.json(
+            { error: "Your session is expired, please login" },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
+    // Parse the request body
+    let { id, fname, lname, email, contact, staffid, address, deptId } =
+      await req.json();
+
+    fname = fname.trim();
+    lname = lname.trim();
+    email = email.trim();
+    contact = contact.trim();
+    staffid = staffid.trim();
+    address = address.trim();
+
+    // Check if the employee exists
+    const existingEmployee = await prisma.employees.findUnique({
+      where: { id: id },
+    });
+
+    if (!existingEmployee) {
+      return NextResponse.json(
+        { error: "Employee not found." },
+        { status: 404 }
+      );
+    }
+
+    // Check if email is unique
+    if (email !== existingEmployee.email) {
+      const existingEmail = await prisma.employees.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive", // Case-insensitive comparison
+          },
+        },
+      });
+
+      if (existingEmail) {
+        return NextResponse.json(
+          { error: "Email already exists." },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Check if staff ID is unique
+    if (staffid !== existingEmployee.staffid) {
+      const existingStaffId = await prisma.employees.findFirst({
+        where: {
+          staffid: {
+            equals: staffid,
+            mode: "insensitive", // Case-insensitive comparison
+          },
+        },
+      });
+
+      if (existingStaffId) {
+        return NextResponse.json(
+          { error: "Staff ID already exists." },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Update the employee
+    const updatedEmployee = await prisma.employees.update({
+      where: { id: id },
+      data: {
+        fname,
+        lname,
+        email,
+        address,
+        contact,
+        deptId,
+        staffid,
+      },
+    });
+
+    return NextResponse.json(
+      { message: "Employee updated successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
 export async function GET() {
   try {
     const employees = await prisma.employees.findMany({

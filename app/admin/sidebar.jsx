@@ -40,7 +40,7 @@ export const AdminSidebar = ({ setShowSidebar }) => {
           className={`p-2 rounded-lg hover:font-semibold ${
             pathname.includes("attendance") && "bg-gray-200"
           }`}
-          href="/employee/attendance"
+          href="/admin/attendance"
           onClick={toggleSidebar}
         >
           Attendance

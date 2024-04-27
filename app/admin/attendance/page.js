@@ -1,62 +1,67 @@
 "use client";
-import { faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowAltCircleRight,
+  faPlusCircle,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NDept } from "./nDept";
+import { NewCode } from "./newCode";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { EditDept } from "./editDept";
+import { EmployeesAttendance } from "./employees";
 
-export default function Departments() {
-  const [addDept, setAddDept] = useState(false);
-  const [editDept, setEditDept] = useState(false);
-  const [departments, setDepartments] = useState([]);
+export default function Attendance() {
+  const [createCode, setCreateCode] = useState(false);
+
+  const [attendanceData, setAttendanceData] = useState([]);
+
   const [loading, setLoading] = useState(false);
-
-  const [deptData, setDeptData] = useState();
 
   const [gData, setGData] = useState(true);
 
+  const [viewAttendance,setViewAttendance] = useState(false)
+
+  const [attendanceCode,setAttendanceCode] = useState()
+
   useEffect(() => {
-    const getDepartments = async () => {
+    const getAttendanceData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/dept");
+        const response = await fetch("/api/attendance/code");
         const responseData = await response.json();
+
         if (!response.ok) {
           toast.error(responseData.error);
-          // setLoading(false)
           return;
         }
-        console.log(responseData.departments);
-        setDepartments(responseData.departments);
+
         setLoading(false);
+        // console.log(responseData)
+
         // toast.success(responseData.message)
+        setAttendanceData(responseData.attendanceCodes);
       } catch (err) {
         console.log(err);
-        toast.error("Departments data could not be retrieved!");
+        toast.error("Unexpected error happened!");
       }
     };
 
     if (gData) {
-      getDepartments();
+      getAttendanceData();
       setGData(false);
     }
   }, [gData]);
 
   return (
     <div>
-      {addDept && <NDept setAddDept={setAddDept} setGData={setGData} />}
-      {editDept && (
-        <EditDept
-          setEditDept={setEditDept}
-          setGData={setGData}
-          deptData={deptData}
-        />
-      )}
-      <h1>Departments</h1>
+      {createCode && <NewCode setCreateCode={setCreateCode} setGData={setGData} />}
+
+      {viewAttendance && <EmployeesAttendance setViewAttendance={setViewAttendance} attendanceCode={attendanceCode} />}
+
+      <h1>Attendance</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-        <div class="p-4 bg-gray-800 flex justify-between">
+        <div class="p-4 flex justify-between">
           <div>
             <label for="table-search" class="sr-only">
               Search
@@ -83,17 +88,17 @@ export default function Departments() {
                 type="text"
                 id="table-search"
                 class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Search department"
+                placeholder="Search employees"
               />
             </div>
           </div>
           <div>
             <button
-              onClick={() => setAddDept(true)}
-              className="p-2 rounded-lg bg-gray-50 flex gap-2 items-center hover:bg-gray-200 text-sm"
+              onClick={() => setCreateCode(true)}
+              className="p-2 rounded-lg bg-gray-800 text-white flex gap-2 items-center hover:bg-gray-600 text-sm"
             >
               <FontAwesomeIcon icon={faPlusCircle} />
-              New Department
+              New Code
             </button>
           </div>
         </div>
@@ -101,53 +106,40 @@ export default function Departments() {
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" class="px-6 py-3">
-                Department
+                Date
               </th>
               <th scope="col" class="px-6 py-3">
-                Action
+                Attendance Code
+              </th>
+              <th scope="col" class="px-6 py-3">
+                No of Employees Present
               </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr class="bg-white border-b hover:bg-gray-50">
-                <td colSpan={2} class="px-6 py-4">
-                  <FontAwesomeIcon icon={faSpinner} spin color="red" /> Loading
-                  Departments...
+                <td colSpan={3} class="px-6 py-4 text-center">
+                  <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                 </td>
               </tr>
-            ) : departments.length > 0 ? (
-              departments.map((dept) => (
+            ) : attendanceData.length > 0 ? (
+              attendanceData.map((data) => (
                 <tr class="bg-white border-b hover:bg-gray-50">
                   <th
                     scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap hover:underline cursor-pointer"
                   >
-                    {dept.name}
+                    {new Date(data.createdAt).toDateString()}
                   </th>
-                  <td class="px-6 py-4 flex gap-4">
-                    <span
-                      onClick={() => {
-                        setDeptData(dept);
-                        setEditDept(true);
-                      }}
-                      class="font-medium text-blue-600 hover:underline cursor-pointer"
-                    >
-                      Edit
-                    </span>
-                    <a
-                      href="#"
-                      class="font-medium text-red-600 hover:underline"
-                    >
-                      Delete
-                    </a>
-                  </td>
+                  <td onClick={()=>{setViewAttendance(true); setAttendanceCode(data.id)}} class="px-6 py-4 font-medium text-blue-600 hover:underline cursor-pointer">{data.code}</td>
+                  <td class="px-6 py-4">{data.numEmployeesPresent}</td>
                 </tr>
               ))
             ) : (
               <tr class="bg-white border-b hover:bg-gray-50">
-                <td colSpan={2} class="px-6 py-4">
-                  No Departments found.
+                <td colSpan={3} class="px-6 py-4 text-center">
+                  No data found
                 </td>
               </tr>
             )}
