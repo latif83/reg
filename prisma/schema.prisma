@@ -23,8 +23,9 @@ model employees {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  department departments  @relation(fields: [deptId], references: [id])
-  attendance attendance[]
+  department  departments   @relation(fields: [deptId], references: [id])
+  attendance  attendance[]
+  appointment appointments[]
 }
 
 // admins model
@@ -74,4 +75,20 @@ model attendanceCode {
 
   createdBy  admins       @relation(fields: [createdById], references: [id])
   attendance attendance[]
+}
+
+// Define the Appointment model
+model appointments {
+  id              String   @id @default(cuid()) // Unique identifier for the appointment
+  visitorName     String // Name of the visitor
+  visitorEmail    String // Email of the visitor
+  visitorPhone    String? // Phone number of the visitor (optional)
+  visitorFrom     String? // Address or location from where the visitor is coming (optional)
+  appointmentDate DateTime // Date of the appointment
+  purpose         String // Purpose or reason for the appointment
+  employeeId      String // ID of the employee the appointment is booked with
+  createdAt       DateTime @default(now()) // Timestamp for when the appointment was created
+  updatedAt       DateTime @updatedAt // Timestamp for when the appointment was last updated
+
+  employee employees @relation(fields: [employeeId], references: [id]) // Employee the appointment is booked with
 }

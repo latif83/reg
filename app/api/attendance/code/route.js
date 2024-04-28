@@ -145,6 +145,9 @@ export async function GET(req) {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      }
     });
 
     // Prepare response data

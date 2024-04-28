@@ -1,18 +1,15 @@
 // Import necessary dependencies
 "use client";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { ShareApointment } from "./share";
-import AppointmentSuccess from "./success";
+import { faArrowRightLong, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRightLong,
-  faShare,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import AppointmentSuccess from "./success";
 
 // Define the Appointment component
-export default function Appointment() {
+export default function BookAppointment({ params }) {
+  const empId = params.empId;
+
   const [loading, setLoading] = useState(false);
 
   const [sData, setSData] = useState(false);
@@ -41,7 +38,7 @@ export default function Appointment() {
 
         // console.log(data);
 
-        const response = await fetch("/api/appointments", {
+        const response = await fetch(`/api/appointments/book/${empId}`, {
           method: "POST",
           body: JSON.stringify(data),
         });
@@ -55,7 +52,7 @@ export default function Appointment() {
 
         toast.success(responseData.message);
         setLoading(false);
-        setBook(false);
+        setBook(false)
       } catch (err) {
         console.log(err);
         toast.error("An unexpected error happened, please try again later!");
@@ -68,16 +65,52 @@ export default function Appointment() {
     }
   }, [sData]);
 
-  const [shareLink, setShareLink] = useState(false);
+  const [employeeInfo, setEmployeeInfo] = useState({});
+  const [empLoading, setEmpLoading] = useState(false);
+
+  useEffect(() => {
+    const getEmployeeInfo = async () => {
+      try {
+        setEmpLoading(true);
+
+        const response = await fetch(`/api/employee/${empId}/data`);
+        const responseData = await response.json();
+        if (!response.ok) {
+          toast.error(responseData.error);
+          return;
+        }
+
+        setEmployeeInfo(responseData.employee);
+
+        // console.log(responseData.employee);
+
+        setEmpLoading(false);
+      } catch (err) {
+        console.log(err);
+        toast.error("Error retrieving data, please try again later!");
+      }
+    };
+
+    getEmployeeInfo();
+  }, []);
+
   const [book, setBook] = useState(true);
 
   return (
-    <div className="container mx-auto mt-4">
-      {book ? (
+    <div className="container mx-auto mt-0">
+      <div className="bg-blue-700 text-white p-3 flex justify-between items-center rounded-b">
+        <h1>Book Appointment</h1>
+
         <div>
-          {shareLink && <ShareApointment setShareLink={setShareLink} />}
-          <h1 className="text-2xl font-bold mb-4">Book Appointment</h1>
-          <form action={handleSubmit}>
+          <h1 className="text-xl font-bold">
+            {employeeInfo.fname} {employeeInfo.lname}
+          </h1>
+          <p>{employeeInfo.department?.name}</p>
+        </div>
+      </div>
+      {book ? (
+        <>
+          <form className="mt-8 p-3" action={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4 mb-5">
               <div className="relative z-0 w-full group">
                 <input
@@ -146,7 +179,6 @@ export default function Appointment() {
                 </label>
               </div>
             </div>
-
             <div className="relative z-0 w-full group mb-5">
               <textarea
                 name="purpose"
@@ -162,7 +194,6 @@ export default function Appointment() {
                 Purpose
               </label>
             </div>
-
             <div className="grid sm:grid-cols-2 gap-4 mb-5">
               <div className="relative z-0 w-full group">
                 <input
@@ -182,10 +213,10 @@ export default function Appointment() {
               </div>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 flex justify-end">
               <button
                 disabled={loading}
-                className="bg-blue-500 disabled:bg-blue-200 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-blue-700 disabled:bg-blue-200 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                 type="submit"
               >
                 {loading ? (
@@ -200,19 +231,13 @@ export default function Appointment() {
                   </>
                 )}
               </button>
-              <button
-                className="ml-4 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
-                type="button"
-                onClick={() => setShareLink(true)}
-              >
-                <FontAwesomeIcon icon={faShare} className="mr-2" />
-                Share Appointment
-              </button>
             </div>
           </form>
-        </div>
+        </>
       ) : (
-        <AppointmentSuccess setBook={setBook} />
+        <div className="mt-12">
+          <AppointmentSuccess setBook={setBook} />
+        </div>
       )}
     </div>
   );

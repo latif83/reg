@@ -1,21 +1,19 @@
-"use client"
+"use client";
 import Link from "next/link";
 import styles from "./sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 
-export const EmployeeSidebar = ({setShowSidebar}) => {
+export const EmployeeSidebar = ({ setShowSidebar }) => {
+  const pathname = usePathname();
 
-    const pathname = usePathname();
-
-    const toggleSidebar = () => {
-        const width = window.innerWidth
-        if(width < 965){
-            setShowSidebar(false);
-        }
-        
-      };
+  const toggleSidebar = () => {
+    const width = window.innerWidth;
+    if (width < 965) {
+      setShowSidebar(false);
+    }
+  };
 
   return (
     <div className="bg-blue-700 relative border-2 h-full w-full p-2">
@@ -32,19 +30,39 @@ export const EmployeeSidebar = ({setShowSidebar}) => {
 
       <div className="mt-12 flex flex-col gap-4">
         <Link
-          className={`p-2 rounded-lg hover:font-semibold ${pathname == '/employee' && 'bg-gray-200' }`}
+          className={`p-2 rounded-lg hover:font-semibold ${
+            pathname == "/employee" && "bg-gray-200"
+          }`}
           href="/employee"
           onClick={toggleSidebar}
         >
           Dashboard
         </Link>
-        <Link className={`p-2 rounded-lg hover:font-semibold ${pathname.includes('attendance') && 'bg-gray-200' }`} href="/employee/attendance" onClick={toggleSidebar} >
+        <Link
+          className={`p-2 rounded-lg hover:font-semibold ${
+            pathname.includes("attendance") && "bg-gray-200"
+          }`}
+          href="/employee/attendance"
+          onClick={toggleSidebar}
+        >
           Attendance
         </Link>
-        <Link className={`p-2 rounded-lg hover:font-semibold ${pathname.includes('appointment') && 'bg-gray-200' }`} href="/employee/appointment" onClick={toggleSidebar} >
+        <Link
+          className={`p-2 rounded-lg hover:font-semibold ${
+            pathname === "/employee/appointments" && "bg-gray-200"
+          }`}
+          href="/employee/appointments"
+          onClick={toggleSidebar}
+        >
           Appointments
         </Link>
-        <Link className="p-2 rounded-lg hover:font-semibold" href="/" onClick={toggleSidebar} >
+        <Link
+          className={`p-2 rounded-lg hover:font-semibold ${
+            pathname === "/employee/appointment" && "bg-gray-200"
+          }`}
+          href="/employee/appointment"
+          onClick={toggleSidebar}
+        >
           Book Appointments
         </Link>
       </div>

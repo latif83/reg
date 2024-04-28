@@ -29,9 +29,9 @@ export const AdminSidebar = ({ setShowSidebar }) => {
       <div className="mt-12 flex flex-col gap-4">
         <Link
           className={`p-2 rounded-lg hover:font-semibold ${
-            pathname == "/employee" && "bg-gray-200"
+            pathname == "/admin" && "bg-gray-200"
           }`}
-          href="/employee"
+          href="/admin"
           onClick={toggleSidebar}
         >
           Dashboard
