@@ -79,16 +79,24 @@ model attendanceCode {
 
 // Define the Appointment model
 model appointments {
-  id              String   @id @default(cuid()) // Unique identifier for the appointment
-  visitorName     String // Name of the visitor
-  visitorEmail    String // Email of the visitor
-  visitorPhone    String? // Phone number of the visitor (optional)
-  visitorFrom     String? // Address or location from where the visitor is coming (optional)
-  appointmentDate DateTime // Date of the appointment
-  purpose         String // Purpose or reason for the appointment
-  employeeId      String // ID of the employee the appointment is booked with
-  createdAt       DateTime @default(now()) // Timestamp for when the appointment was created
-  updatedAt       DateTime @updatedAt // Timestamp for when the appointment was last updated
+  id              String   @id @default(cuid())
+  visitorName     String
+  visitorEmail    String
+  visitorPhone    String?
+  visitorFrom     String?
+  appointmentDate DateTime
+  purpose         String
+  employeeId      String
+  status          AppointmentStatus @default(PENDING)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  employee employees @relation(fields: [employeeId], references: [id]) // Employee the appointment is booked with
+  employee employees @relation(fields: [employeeId], references: [id])
+}
+
+// Define the AppointmentStatus enum
+enum AppointmentStatus {
+  PENDING
+  APPROVED
+  DECLINED
 }

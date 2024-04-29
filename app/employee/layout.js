@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EmployeeSidebar } from "./sidebar";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import styles from './layout.module.css'
+import styles from "./layout.module.css";
 
 export default function RootLayout({ children }) {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -24,12 +24,20 @@ export default function RootLayout({ children }) {
     <div className="flex h-screen overflow-hidden">
       <div
         style={{ width: "20%" }}
-        className={`h-full ${!showSidebar && "hidden"} ${styles.sidebarContainer}`}
+        className={`h-full ${!showSidebar && "hidden"} ${
+          styles.sidebarContainer
+        }`}
       >
         <EmployeeSidebar setShowSidebar={setShowSidebar} />
       </div>
-      <div style={{ width: "100%" }} className={`h-full border-2 ${styles.mainContainer}`}>
-        <div className="bg-blue-700 shadow p-3 flex justify-between items-center text-gray-100">
+      <div
+        style={{ width: "100%", height: "100%" }}
+        className={`h-full border-2 ${styles.mainContainer} flex flex-col`}
+      >
+        <div
+          style={{ height: "10%" }}
+          className="bg-blue-700 shadow p-3 flex justify-between items-center text-gray-100"
+        >
           <div>
             <FontAwesomeIcon
               onClick={toggleSidebar}
@@ -44,9 +52,9 @@ export default function RootLayout({ children }) {
             <p>Abdul-Latif Mohammed</p>
           </div>
         </div>
-        <div className="p-3">
-        {children}
-            </div>
+        <div style={{ height: "90%" }} className="p-3 overflow-y-auto">
+          {children}
+        </div>
       </div>
     </div>
   );
