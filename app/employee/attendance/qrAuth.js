@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
 
-export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone }) => {
+export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
   const [pickQRChoice, setPickQRChoice] = useState(true);
 
   const [enterAttendanceCode, setEnterAttendanceCode] = useState(false);
@@ -55,6 +55,8 @@ export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone }) => {
         }
 
         toast.success(responseData.message)
+
+        setFetchData(true)
 
         hideQRModal()
 

@@ -41,8 +41,41 @@ export async function POST(req) {
     // Parse the request body
     const { attendanceCode } = await req.json();
 
+    // Get the user ID from the decoded token
+    const { userId: employeeId } = verificationResult.decodedToken;
+
     // Get the current date
     const currentDate = new Date();
+
+    // Check if the employee has already clocked in for the day
+    const existingAttendance = await prisma.attendance.findFirst({
+      where: {
+        AND: [
+          { employeeId: employeeId },
+          {
+            clockIn: {
+              gte: new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                currentDate.getDate()
+              ),
+              lt: new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                currentDate.getDate() + 1
+              ),
+            },
+          },
+        ],
+      },
+    });
+
+    if (existingAttendance) {
+      return NextResponse.json(
+        { error: "You have already clocked in for the day" },
+        { status: 400 }
+      );
+    }
 
     // Find the attendance code for the current day
     const existingAttendanceCode = await prisma.attendanceCode.findFirst({
@@ -75,9 +108,6 @@ export async function POST(req) {
       );
     }
 
-    // Get the user ID from the decoded token
-    const { userId: employeeId } = verificationResult.decodedToken;
-
     // Clock in the employee
     await prisma.attendance.create({
       data: {
@@ -99,3 +129,4 @@ export async function POST(req) {
     );
   }
 }
+
