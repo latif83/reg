@@ -55,7 +55,7 @@ export async function POST(req) {
 
     const employeeId = user.userId;
 
-    appointmentDate = new Date().toISOString(); // This will generate a date string in the format "YYYY-MM-DDTHH:mm:ss.sssZ"
+    appointmentDate = new Date(appointmentDate).toISOString(); // This will generate a date string in the format "YYYY-MM-DDTHH:mm:ss.sssZ"
 
     // Create the appointment in the database
     const newAppointment = await prisma.appointments.create({
@@ -68,6 +68,77 @@ export async function POST(req) {
         purpose,
         employeeId,
       },
+    });
+
+    // Get employee details
+    const employeeDetails = await prisma.employees.findUnique({
+      where: {
+        id: user.userId,
+      },
+      select: {
+        id: true,
+        fname: true,
+        lname: true,
+        email: true,
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+
+    // Send email to employee
+   await fetch(
+      `${process.env.MAIL_SERVER_URL}/send-employee-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: employeeDetails.email, // Use the employee's email address
+          toName: `${employeeDetails.fname} ${employeeDetails.lname}`, // Use the employee's name
+          subject: `New Appointment Booked On ${new Date(
+            appointmentDate
+          ).toDateString()} - ${new Date(
+            appointmentDate
+          ).toLocaleTimeString()}`,
+          status: "Pending",
+          user: "latifm8360@gmail.com",
+          pass: "ziez xcek uckf uhyw",
+          appointmentData: {
+            visitorName,
+            visitorEmail,
+            visitorPhone,
+            visitorFrom,
+            appointmentDate,
+            purpose,
+          },
+        }),
+      }
+    );
+
+    // Send email to client
+    await fetch(`${process.env.MAIL_SERVER_URL}/send-client-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        toName: visitorName,
+        to: visitorEmail, // Use the client's email address provided in the request
+        subject: `New Appointment Booked On ${new Date(
+          appointmentDate
+        ).toDateString()} - ${new Date(appointmentDate).toLocaleTimeString()}`,
+        status: "Pending",
+        user: "latifm8360@gmail.com",
+        pass: "ziez xcek uckf uhyw",
+        employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
+        position: employeeDetails.department.name,
+      }),
     });
 
     return NextResponse.json(
@@ -83,11 +154,9 @@ export async function POST(req) {
   }
 }
 
-
 // GET API to fetch all appointments for a particular employee
 export async function GET(req, params) {
   try {
-
     const hasCookies = cookies().has("access-token");
     let user = {};
 
@@ -129,16 +198,13 @@ export async function GET(req, params) {
         employeeId: employeeId,
       },
       orderBy: {
-        createdAt: 'desc', // You can adjust the sorting as per your requirement
+        createdAt: "desc", // You can adjust the sorting as per your requirement
       },
     });
 
     // console.log({appointments,count:appointments.length})
 
-    return NextResponse.json(
-      { appointments: appointments },
-      { status: 200 }
-    );
+    return NextResponse.json({ appointments: appointments }, { status: 200 });
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return NextResponse.json(
@@ -186,9 +252,24 @@ export async function PUT(req, params) {
 
     const { appointmentId, status } = await req.json();
 
-    // Check if the user has permission to change the appointment status (you can add more validation logic if needed)
-    // For example, you might want to check if the user is the owner of the appointment
-    // or has certain roles/permissions to modify appointment status.
+   // Get employee details
+   const employeeDetails = await prisma.employees.findUnique({
+    where: {
+      id: user.userId,
+    },
+    select: {
+      id: true,
+      fname: true,
+      lname: true,
+      email: true,
+      department: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
 
     // Update the appointment status in the database
     const updatedAppointment = await prisma.appointments.update({
@@ -197,6 +278,57 @@ export async function PUT(req, params) {
         status: status,
       },
     });
+
+       // Send email to employee
+   await fetch(
+    `${process.env.MAIL_SERVER_URL}/send-employee-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: employeeDetails.email, // Use the employee's email address
+        toName: `${employeeDetails.fname} ${employeeDetails.lname}`, // Use the employee's name
+        subject: `Appointment Updated - Booked On ${new Date(
+          updatedAppointment.appointmentDate
+        ).toDateString()} - ${new Date(
+          updatedAppointment.appointmentDate
+        ).toLocaleTimeString()}`,
+        status,
+        user: "latifm8360@gmail.com",
+        pass: "ziez xcek uckf uhyw",
+        appointmentData: {
+          visitorName : updatedAppointment.visitorName,
+          visitorEmail : updatedAppointment.visitorEmail,
+          visitorPhone : updatedAppointment.visitorPhone,
+          visitorFrom : updatedAppointment.visitorFrom,
+          appointmentDate : updatedAppointment.appointmentDate,
+          purpose : updatedAppointment.purpose,
+        },
+      }),
+    }
+  );
+
+  // Send email to client
+  await fetch(`${process.env.MAIL_SERVER_URL}/send-client-email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      toName: updatedAppointment.visitorName,
+      to: updatedAppointment.visitorEmail, // Use the client's email address provided in the request
+      subject: `Appointment Updated - Booked On ${new Date(
+        updatedAppointment.appointmentDate
+      ).toDateString()} - ${new Date(updatedAppointment.appointmentDate).toLocaleTimeString()}`,
+      status,
+      user: "latifm8360@gmail.com",
+      pass: "ziez xcek uckf uhyw",
+      employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
+      position: employeeDetails.department.name,
+    }),
+  });
 
     return NextResponse.json(
       { message: "Appointment status updated successfully" },

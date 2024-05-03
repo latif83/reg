@@ -65,6 +65,8 @@ export async function GET(req, params) {
       },
     });
 
+    console.log(employee)
+
     return NextResponse.json(
       {
         message: "Employee data retrieved successfully!",

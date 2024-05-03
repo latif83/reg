@@ -41,6 +41,8 @@ export default function Appointment() {
 
         // console.log(data);
 
+        // return
+
         const response = await fetch("/api/appointments", {
           method: "POST",
           body: JSON.stringify(data),
