@@ -9,6 +9,7 @@ import { NewCode } from "./newCode";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { EmployeesAttendance } from "./employees";
+import { Codes } from "./code";
 
 export default function Attendance() {
   const [createCode, setCreateCode] = useState(false);
@@ -19,9 +20,12 @@ export default function Attendance() {
 
   const [gData, setGData] = useState(true);
 
-  const [viewAttendance,setViewAttendance] = useState(false)
+  const [viewAttendance, setViewAttendance] = useState(false);
 
-  const [attendanceCode,setAttendanceCode] = useState()
+  const [attendanceCode, setAttendanceCode] = useState();
+
+  const [code, setCode] = useState("");
+  const [viewCode, setViewCode] = useState(false);
 
   useEffect(() => {
     const getAttendanceData = async () => {
@@ -54,9 +58,20 @@ export default function Attendance() {
 
   return (
     <div>
-      {createCode && <NewCode setCreateCode={setCreateCode} setGData={setGData} />}
+      {createCode && (
+        <NewCode setCreateCode={setCreateCode} setGData={setGData} />
+      )}
 
-      {viewAttendance && <EmployeesAttendance setViewAttendance={setViewAttendance} attendanceCode={attendanceCode} />}
+      {viewAttendance && (
+        <EmployeesAttendance
+          setViewAttendance={setViewAttendance}
+          attendanceCode={attendanceCode}
+        />
+      )}
+
+      {viewCode && (
+        <Codes code={code} setViewCode={setViewCode} />
+      )}
 
       <h1>Attendance</h1>
 
@@ -132,8 +147,24 @@ export default function Attendance() {
                   >
                     {new Date(data.createdAt).toDateString()}
                   </th>
-                  <td onClick={()=>{setViewAttendance(true); setAttendanceCode(data.id)}} class="px-6 py-4 font-medium text-blue-600 hover:underline cursor-pointer">{data.code}</td>
-                  <td class="px-6 py-4">{data.numEmployeesPresent}</td>
+                  <td
+                    onClick={() => {
+                      setCode(data.code);
+                      setViewCode(true);
+                    }}
+                    class="px-6 py-4 font-medium text-blue-600 hover:underline cursor-pointer"
+                  >
+                    {data.code}
+                  </td>
+                  <td
+                    onClick={() => {
+                      setViewAttendance(true);
+                      setAttendanceCode(data.id);
+                    }}
+                    class="px-6 py-4 font-medium text-blue-600 hover:underline cursor-pointer"
+                  >
+                    {data.numEmployeesPresent}
+                  </td>
                 </tr>
               ))
             ) : (

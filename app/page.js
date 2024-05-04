@@ -62,7 +62,7 @@ export default function Home() {
   }, [sData]);
 
   return (
-    <div className="h-screen relative">
+    <div style={{height:'100svh'}} className="relative">
       <div
         className={`bg-blue-700 absolute top-0 left-0 w-full ${styles.banner}`}
         style={{ height: "50%" }}

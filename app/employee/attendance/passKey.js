@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export const PassKey = ({ setAuthenticate,setAuthDone }) => {
+export const PassKey = ({ setAuthenticate, setAuthDone }) => {
   const [loading, setLoading] = useState(false);
 
   const [usePassword, setUsePassword] = useState(false);
@@ -22,21 +22,48 @@ export const PassKey = ({ setAuthenticate,setAuthDone }) => {
 
   useEffect(() => {
     const fingerPrintAuth = async () => {
-      const rawIdArrayBuffer = "Array buffer here...";
+      const registrationData = {
+        rawId: "nUAQBIHiMO+W8Q3RZr+4sA==",
+      };
+
+      // Decode rawId from base64 to ArrayBuffer
+      const rawIdArrayBuffer = Uint8Array.from(
+        atob(registrationData.rawId),
+        (c) => c.charCodeAt(0)
+      );
+      const challenge = new Uint8Array(32);
+
+      // Construct assertion options
 
       const assertionOptions = {
         publicKey: {
-          rpId: "localhost",
+          rpId: "453d-102-176-65-121.ngrok-free.app",
           challenge: new Uint8Array(32),
           userVerification: "preferred",
-          allowCredentials: [{ type: "public-key", id: rawIdArrayBuffer }],
+          allowCredentials: [
+            { type: "public-key", id: rawIdArrayBuffer.buffer },
+          ],
         },
       };
 
       // Perform assertion
-      const assertion = await navigator.credentials.get(assertionOptions);
-
-      console.log(assertion);
+      navigator.credentials
+        .get(assertionOptions)
+        .then((assertion) => {
+          // Handle assertion response
+          console.log("Assertion response:", assertion);
+          // const verificationStatus = document.getElementById("verificationStatus");
+          toast.success("Verification successful");
+          setAuthDone(true);
+          setAuthenticate(false);
+        })
+        .catch((error) => {
+          console.error("Assertion failed:", error);
+          // const verificationStatus = document.getElementById("verificationStatus");
+          // verificationStatus.innerText = "Verification failed";
+          // Handle assertion failure, e.g., display an error message to the user
+          toast.error("Verification failed");
+        });
     };
 
     if (useFingerprint) {
@@ -51,7 +78,6 @@ export const PassKey = ({ setAuthenticate,setAuthDone }) => {
   };
 
   useEffect(() => {
-
     const authenticateUser = async () => {
       try {
         setLoading(true);
@@ -75,8 +101,8 @@ export const PassKey = ({ setAuthenticate,setAuthDone }) => {
         }
 
         toast.success(responseData.message);
-        setAuthDone(true)
-        setAuthenticate(false)
+        setAuthDone(true);
+        setAuthenticate(false);
       } catch (err) {
         console.log(err);
         toast.error("Unexpected Error, Please try again later!");
@@ -87,7 +113,6 @@ export const PassKey = ({ setAuthenticate,setAuthDone }) => {
       authenticateUser();
       setSData(false);
     }
-    
   }, [sData]);
 
   return (

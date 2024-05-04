@@ -9,6 +9,8 @@ import {
 import { useEffect, useState } from "react";
 import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
+import { QrReader, QrReaderViewFinder } from "reactjs-qr-code-reader";
+import { Scanner } from '@yudiel/react-qr-scanner';
 
 export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
   const [pickQRChoice, setPickQRChoice] = useState(true);
@@ -19,59 +21,66 @@ export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const [read, setRead] = useState(true);
+
   const hideQRModal = () => {
     setAuthDone(false);
     setQRAuth(false);
   };
 
-  const [sData,setSData] = useState(false)
+  const [sData, setSData] = useState(false);
+
+  const [useFingerPrint, setUseFingerprint] = useState(false);
 
   const submit = () => {
-    setSData(true)
+    setSData(true);
   };
 
-  useEffect(()=>{
-
-    const sendAttendance = async ()=>{
-      try{
-
-        setLoading(true)
+  useEffect(() => {
+    const sendAttendance = async () => {
+      try {
+        setLoading(true);
 
         const data = {
-          attendanceCode
+          attendanceCode,
+        };
+
+        const response = await fetch("/api/attendance/in", {
+          method: "POST",
+          body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+          setLoading(false);
+          toast.error(responseData.error);
+          return;
         }
 
-        const response = await fetch("/api/attendance/in",{
-          method : "POST",
-          body : JSON.stringify(data)
-        })
+        toast.success(responseData.message);
 
-        const responseData = await response.json()
+        setFetchData(true);
 
-        if(!response.ok){
-          setLoading(false)
-          toast.error(responseData.error)
-          return
-        }
-
-        toast.success(responseData.message)
-
-        setFetchData(true)
-
-        hideQRModal()
-
+        hideQRModal();
+      } catch (err) {
+        console.log(err);
       }
-      catch(err){
-        console.log(err)
-      }
-    }
+    };
 
-    if(sData){
-      sendAttendance()
-      setSData(false)
+    if (sData) {
+      sendAttendance();
+      setSData(false);
     }
+  }, [sData]);
 
-  },[sData])
+  const logError = (e)=>{
+    console.log(e)
+  }
+
+  const QrRead = (e)=>{
+    console.log(e)
+  }
 
   return (
     <div className={`${styles.container} flex items-center justify-center`}>
@@ -112,7 +121,7 @@ export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
             <div className="flex flex-col gap-4 items-center justify-center">
               <button
                 onClick={() => {
-                  //   setUseFingerprint(true);
+                  setUseFingerprint(true);
                   setPickQRChoice(false);
                 }}
                 className="shadow-lg shadow-gray-500/50 hover:bg-gray-700 ease-in-out duration-500 font-medium rounded-full text-3xl px-4 py-3 text-center hover:text-white"
@@ -145,7 +154,10 @@ export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
               </label>
             </div>
             <p>
-              <small className="text-red-500 text-xs font-semibold" style={{ fontStyle: "italic" }}>
+              <small
+                className="text-red-500 text-xs font-semibold"
+                style={{ fontStyle: "italic" }}
+              >
                 See Admin for Code
               </small>
             </p>
@@ -167,6 +179,16 @@ export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
               </button>
             </div>
           </form>
+        )}
+
+        {useFingerPrint && (
+          // <QrReader read={read} onRead={(e)=>QrRead(e)} onReadError={(e)=>logError(e)}>
+          //   <QrReaderViewFinder />
+          // </QrReader>
+          <Scanner
+            onResult={(text, result) => console.log(text, result)}
+            onError={(error) => console.log(error?.message)}
+        />
         )}
       </div>
     </div>

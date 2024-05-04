@@ -65,6 +65,15 @@ export const EmployeeSidebar = ({ setShowSidebar }) => {
         >
           Book Appointments
         </Link>
+        <Link
+          className={`p-2 rounded-lg hover:font-semibold ${
+            pathname === "/employee/setfingerprint" && "bg-gray-200"
+          }`}
+          href="/employee/setfingerprint"
+          onClick={toggleSidebar}
+        >
+          Set Fingerprint
+        </Link>
       </div>
 
       <div className="absolute bottom-0 w-full left-0">

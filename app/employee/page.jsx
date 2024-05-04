@@ -171,17 +171,17 @@ export default function EmployeeDashboard() {
             Clock in / out
           </Link>
 
-          <div className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
+          <Link href="/employee/attendance" className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
             View Attendance History
-          </div>
+          </Link>
 
-          <div className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
+          <Link href="/employee/appointment" className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
             Book Apointment
-          </div>
+          </Link>
 
-          <div className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
+          <Link href="/employee/appointments" className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
             View Apointment History
-          </div>
+          </Link>
         </div>
       </div>
     </div>
