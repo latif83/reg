@@ -22,13 +22,22 @@ export const PassKey = ({ setAuthenticate, setAuthDone }) => {
 
   useEffect(() => {
     const fingerPrintAuth = async () => {
+     try{
+
+       // Check if the fingerprint flag is stored in localStorage
+    const fingerprintFlag = localStorage.getItem("hasFingerprint");
+    let fingerprintData = {}
+    if (fingerprintFlag === "true") {
+      fingerprintData = JSON.parse(localStorage.getItem("Fingerprint"))
+    }
+
       const registrationData = {
         rawId: "nUAQBIHiMO+W8Q3RZr+4sA==",
       };
 
       // Decode rawId from base64 to ArrayBuffer
       const rawIdArrayBuffer = Uint8Array.from(
-        atob(registrationData.rawId),
+        atob(fingerprintData.rawId),
         (c) => c.charCodeAt(0)
       );
       const challenge = new Uint8Array(32);
@@ -37,7 +46,7 @@ export const PassKey = ({ setAuthenticate, setAuthDone }) => {
 
       const assertionOptions = {
         publicKey: {
-          rpId: "453d-102-176-65-121.ngrok-free.app",
+          rpId: process.env.NGROK,
           challenge: new Uint8Array(32),
           userVerification: "preferred",
           allowCredentials: [
@@ -64,6 +73,10 @@ export const PassKey = ({ setAuthenticate, setAuthDone }) => {
           // Handle assertion failure, e.g., display an error message to the user
           toast.error("Verification failed");
         });
+     } catch(err){
+      console.log(err)
+      toast.error("Fingerprint authentication failed on this device, please try again with a different device!")
+     }
     };
 
     if (useFingerprint) {
