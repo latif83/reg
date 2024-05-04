@@ -20,7 +20,6 @@ model employees {
   address   String
   deptId    String
   contact   String
-  rawId     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

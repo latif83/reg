@@ -184,7 +184,7 @@ export default function Appointment() {
               </div>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 flex gap-2">
               <button
                 disabled={loading}
                 className="bg-blue-500 disabled:bg-blue-200 text-white px-4 py-2 rounded-md hover:bg-blue-600"
