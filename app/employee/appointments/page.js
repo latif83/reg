@@ -15,11 +15,15 @@ export default function Appointments() {
 
   const [gData, setGData] = useState(true);
 
+  const [filterDate, setFilterDate] = useState("");
+  const [filterBy, setFilterBy] = useState("createdAt");
+
   useEffect(() => {
     const getAppointments = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/appointments`);
+        const filters = `?filterDate=${filterDate}&filterBy=${filterBy}`;
+        const response = await fetch(`/api/appointments${filters}`);
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -50,13 +54,13 @@ export default function Appointments() {
         <AppointmentDetails
           setViewAppointment={setViewAppointment}
           appointmentData={appointmentData}
-          setGData = {setGData}
+          setGData={setGData}
         />
       )}
       <h1>Appointments</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-        <div class="p-4 bg-gray-800 flex justify-between">
+        <div class="p-4 bg-gray-800 flex items-center gap-4">
           <div>
             <label htmlFor="date-input" className="sr-only">
               Select Date
@@ -84,18 +88,36 @@ export default function Appointments() {
                 id="date-input"
                 className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Select Date"
+                value={filterDate}
+                onChange={(e) => {
+                  setFilterDate(e.target.value);
+                  setGData(true);
+                }}
               />
             </div>
           </div>
 
-          <div>
-            <button
-              // onClick={() => setAddEmployee(true)}
-              className="p-2 rounded-lg bg-gray-50 flex gap-2 items-center hover:bg-gray-200 text-sm"
+          <div className="relative">
+            {/* <label
+              htmlFor="dept"
+              className="block mb-2 text-sm font-medium text-gray-50"
             >
-              <FontAwesomeIcon icon={faPlusCircle} />
-              New Employee
-            </button>
+              Filter by:
+            </label> */}
+            <select
+              id="dept"
+              name="dept"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              required
+              value={filterBy}
+              onChange={(e) => {
+                setFilterBy(e.target.value);
+                setGData(true);
+              }}
+            >
+              <option value="createdAt">Booking Date</option>
+              <option value="appointmentDate">Appointment Date</option>
+            </select>
           </div>
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500">

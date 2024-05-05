@@ -19,7 +19,7 @@ export const EmployeeSidebar = ({ setShowSidebar }) => {
     <div className="bg-blue-700 relative border-2 h-full w-full p-2">
       <div className="flex w-full overflow-hidden items-center flex-col justify-center mt-3 font-semibold text-gray-700 gap-2">
         <img
-          class="w-10 h-10 mr-2 p-2 bg-white rounded-full"
+          className="w-10 h-10 mr-2 p-2 bg-white rounded-full"
           src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
           alt="logo"
         />

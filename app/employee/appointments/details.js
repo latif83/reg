@@ -4,11 +4,15 @@ import styles from "./details.module.css";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { DeclineRequest } from "./decline";
 
 export const AppointmentDetails = ({ setViewAppointment, appointmentData,setGData }) => {
 
     const [approveRequest,setApproveRequest] = useState(false)
     const [declineRequest,setDeclineRequest] = useState(false)
+
+    const [confirmDecline,setConfirmDecline] = useState(false)
+    const [declineReason,setDeclineReason] = useState("")
 
     useEffect(()=>{
 
@@ -17,7 +21,8 @@ export const AppointmentDetails = ({ setViewAppointment, appointmentData,setGDat
 
                 const data = {
                     appointmentId : appointmentData.id,
-                    status
+                    status,
+                    declineReason
                 }
 
                 const response = await fetch("/api/appointments",{
@@ -43,12 +48,13 @@ export const AppointmentDetails = ({ setViewAppointment, appointmentData,setGDat
         }
 
         approveRequest && ApproveOrDeclineRequest("APPROVED")
-        declineRequest && ApproveOrDeclineRequest("DECLINED")
+        confirmDecline && ApproveOrDeclineRequest("DECLINED")
 
     },[approveRequest,declineRequest])
 
   return (
     <div className={`${styles.container} flex items-center justify-center`}>
+      {declineRequest && <DeclineRequest setDeclineRequest={setDeclineRequest} setConfirmDecline={setConfirmDecline} declineReason={declineReason} setDeclineReason={setDeclineReason} /> }
       <div className="w-full max-w-2xl mx-auto bg-gray-50 rounded shadow p-6">
         <div className="flex justify-between mb-5">
           <h1 className="font-semibold">Appointment Details</h1>

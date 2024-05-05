@@ -110,6 +110,7 @@ export async function POST(req, params) {
       pass: "ziez xcek uckf uhyw",
       employeeName: `${checkEmployee.fname} ${checkEmployee.lname}`,
       position: checkEmployee.department.name,
+      declineReason : ""
     }),
   });
 

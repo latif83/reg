@@ -89,37 +89,31 @@ export async function POST(req) {
       },
     });
 
-
     // Send email to employee
-   await fetch(
-      `${process.env.MAIL_SERVER_URL}/send-employee-email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    await fetch(`${process.env.MAIL_SERVER_URL}/send-employee-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: employeeDetails.email, // Use the employee's email address
+        toName: `${employeeDetails.fname} ${employeeDetails.lname}`, // Use the employee's name
+        subject: `New Appointment Booked On ${new Date(
+          appointmentDate
+        ).toDateString()} - ${new Date(appointmentDate).toLocaleTimeString()}`,
+        status: "Pending",
+        user: "latifm8360@gmail.com",
+        pass: "ziez xcek uckf uhyw",
+        appointmentData: {
+          visitorName,
+          visitorEmail,
+          visitorPhone,
+          visitorFrom,
+          appointmentDate,
+          purpose,
         },
-        body: JSON.stringify({
-          to: employeeDetails.email, // Use the employee's email address
-          toName: `${employeeDetails.fname} ${employeeDetails.lname}`, // Use the employee's name
-          subject: `New Appointment Booked On ${new Date(
-            appointmentDate
-          ).toDateString()} - ${new Date(
-            appointmentDate
-          ).toLocaleTimeString()}`,
-          status: "Pending",
-          user: "latifm8360@gmail.com",
-          pass: "ziez xcek uckf uhyw",
-          appointmentData: {
-            visitorName,
-            visitorEmail,
-            visitorPhone,
-            visitorFrom,
-            appointmentDate,
-            purpose,
-          },
-        }),
-      }
-    );
+      }),
+    });
 
     // Send email to client
     await fetch(`${process.env.MAIL_SERVER_URL}/send-client-email`, {
@@ -138,6 +132,7 @@ export async function POST(req) {
         pass: "ziez xcek uckf uhyw",
         employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
         position: employeeDetails.department.name,
+        declineReason : ""
       }),
     });
 
@@ -192,10 +187,51 @@ export async function GET(req, params) {
 
     const employeeId = user.userId;
 
+    // Parse query parameters
+    const { searchParams } = new URL(req.url);
+    const filterDate = searchParams.get("filterDate");
+    const filterBy = searchParams.get("filterBy");
+
+    let whereConditions = {}; // Define an empty object to hold the WHERE conditions
+
+    if (filterDate && filterBy) {
+      // Both filterDate and filterBy are provided
+      if (filterBy === "appointmentDate") {
+        // Filter appointments by the specified appointmentDate
+        const filterDateWithoutTime = new Date(filterDate)
+          .toISOString()
+          .split("T")[0]; // Get only the date part
+        whereConditions.appointmentDate = {
+          gte: new Date(filterDateWithoutTime + "T00:00:00.000Z"), // Start of the specified date
+          lt: new Date(
+            new Date(filterDateWithoutTime + "T23:59:59.999Z").getTime() + 1
+          ), // End of the specified date
+        };
+      } else if (filterBy === "createdAt") {
+        // Filter appointments by the date they were created
+        // Here you can adjust the conditions as needed based on your database schema
+        // For example, filtering by appointments created on a specific date
+        const filterDateWithoutTime = new Date(filterDate)
+          .toISOString()
+          .split("T")[0]; // Get only the date part
+        whereConditions.createdAt = {
+          gte: new Date(filterDateWithoutTime + "T00:00:00.000Z"), // Start of the specified date
+          lt: new Date(
+            new Date(filterDateWithoutTime + "T23:59:59.999Z").getTime() + 1
+          ), // End of the specified date
+        };
+      }
+    } else if (filterDate) {
+      // Only filterDate is provided
+      // If only filterDate is provided, assume filtering by appointmentDate
+      whereConditions.appointmentDate = new Date(filterDate);
+    }
+
     // Fetch appointments for the specified employee from the database
     const appointments = await prisma.appointments.findMany({
       where: {
         employeeId: employeeId,
+        ...whereConditions, // Merge the whereConditions object with the existing WHERE clause
       },
       orderBy: {
         createdAt: "desc", // You can adjust the sorting as per your requirement
@@ -250,39 +286,38 @@ export async function PUT(req, params) {
       }
     }
 
-    const { appointmentId, status } = await req.json();
+    const { appointmentId, status, declineReason } = await req.json();
 
-   // Get employee details
-   const employeeDetails = await prisma.employees.findUnique({
-    where: {
-      id: user.userId,
-    },
-    select: {
-      id: true,
-      fname: true,
-      lname: true,
-      email: true,
-      department: {
-        select: {
-          id: true,
-          name: true,
+    // Get employee details
+    const employeeDetails = await prisma.employees.findUnique({
+      where: {
+        id: user.userId,
+      },
+      select: {
+        id: true,
+        fname: true,
+        lname: true,
+        email: true,
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-    },
-  });
+    });
 
     // Update the appointment status in the database
     const updatedAppointment = await prisma.appointments.update({
       where: { id: appointmentId },
       data: {
         status: status,
+        declineReason: declineReason,
       },
     });
 
-       // Send email to employee
-   await fetch(
-    `${process.env.MAIL_SERVER_URL}/send-employee-email`,
-    {
+    // Send email to employee
+    await fetch(`${process.env.MAIL_SERVER_URL}/send-employee-email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -299,36 +334,38 @@ export async function PUT(req, params) {
         user: "latifm8360@gmail.com",
         pass: "ziez xcek uckf uhyw",
         appointmentData: {
-          visitorName : updatedAppointment.visitorName,
-          visitorEmail : updatedAppointment.visitorEmail,
-          visitorPhone : updatedAppointment.visitorPhone,
-          visitorFrom : updatedAppointment.visitorFrom,
-          appointmentDate : updatedAppointment.appointmentDate,
-          purpose : updatedAppointment.purpose,
+          visitorName: updatedAppointment.visitorName,
+          visitorEmail: updatedAppointment.visitorEmail,
+          visitorPhone: updatedAppointment.visitorPhone,
+          visitorFrom: updatedAppointment.visitorFrom,
+          appointmentDate: updatedAppointment.appointmentDate,
+          purpose: updatedAppointment.purpose,
         },
       }),
-    }
-  );
+    });
 
-  // Send email to client
-  await fetch(`${process.env.MAIL_SERVER_URL}/send-client-email`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      toName: updatedAppointment.visitorName,
-      to: updatedAppointment.visitorEmail, // Use the client's email address provided in the request
-      subject: `Appointment Updated - Booked On ${new Date(
-        updatedAppointment.appointmentDate
-      ).toDateString()} - ${new Date(updatedAppointment.appointmentDate).toLocaleTimeString()}`,
-      status,
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
-      employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
-      position: employeeDetails.department.name,
-    }),
-  });
+    // Send email to client
+    await fetch(`${process.env.MAIL_SERVER_URL}/send-client-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        toName: updatedAppointment.visitorName,
+        to: updatedAppointment.visitorEmail, // Use the client's email address provided in the request
+        subject: `Appointment Updated - Booked On ${new Date(
+          updatedAppointment.appointmentDate
+        ).toDateString()} - ${new Date(
+          updatedAppointment.appointmentDate
+        ).toLocaleTimeString()}`,
+        status,
+        user: "latifm8360@gmail.com",
+        pass: "ziez xcek uckf uhyw",
+        employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
+        position: employeeDetails.department.name,
+        declineReason,
+      }),
+    });
 
     return NextResponse.json(
       { message: "Appointment status updated successfully" },

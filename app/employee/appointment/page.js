@@ -184,10 +184,10 @@ export default function Appointment() {
               </div>
             </div>
 
-            <div className="mb-4 flex gap-2">
+            <div className="mb-4 sm:flex flex-col gap-4">
               <button
                 disabled={loading}
-                className="bg-blue-500 disabled:bg-blue-200 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 disabled:bg-blue-200 text-white px-4 py-2 rounded-md hover:bg-blue-600 md:w-full"
                 type="submit"
               >
                 {loading ? (
@@ -203,7 +203,7 @@ export default function Appointment() {
                 )}
               </button>
               <button
-                className="ml-4 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 md:w-full"
                 type="button"
                 onClick={() => setShareLink(true)}
               >

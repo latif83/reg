@@ -69,7 +69,7 @@ export async function GET(req) {
       department: attendance.employee.department.name, // Include department name
     }));
 
-    console.log(employees);
+    // console.log(employees);
 
     return NextResponse.json({ employees }, { status: 200 });
   } catch (error) {
