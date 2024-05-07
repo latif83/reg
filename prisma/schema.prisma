@@ -23,9 +23,11 @@ model employees {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  department  departments   @relation(fields: [deptId], references: [id])
-  attendance  attendance[]
-  appointment appointments[]
+  department    departments    @relation(fields: [deptId], references: [id])
+  attendance    attendance[]
+  appointment   appointments[]
+  sentMemos     Memo[]         @relation("MemoSender")
+  receivedMemos Memo[]         @relation("MemoRecipient")
 }
 
 // admins model
@@ -79,7 +81,7 @@ model attendanceCode {
 
 // Define the Appointment model
 model appointments {
-  id              String   @id @default(cuid())
+  id              String            @id @default(cuid())
   visitorName     String
   visitorEmail    String
   visitorPhone    String?
@@ -88,11 +90,25 @@ model appointments {
   purpose         String
   employeeId      String
   status          AppointmentStatus @default(PENDING)
-  declineReason String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  declineReason   String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   employee employees @relation(fields: [employeeId], references: [id])
+}
+
+model Memo {
+  id          Int               @id @default(autoincrement())
+  title       String
+  details     String
+  senderId    String
+  recipientId String
+  status      AppointmentStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  recipient employees @relation("MemoRecipient", fields: [recipientId], references: [id])
+  sender    employees @relation("MemoSender", fields: [senderId], references: [id])
 }
 
 // Define the AppointmentStatus enum

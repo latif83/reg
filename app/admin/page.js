@@ -43,7 +43,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="mt-5">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4">
           <div className="rounded p-3 bg-black text-white relative">
             <div className="flex gap-2">
               <span className={`${styles.icons}`}>
