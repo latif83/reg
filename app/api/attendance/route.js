@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/actions/action";
 import { cookies } from "next/headers";
 
+export const dynamic = 'force-dynamic';
+
 // GET API to fetch attendance history for an employee
 // GET API to fetch attendance history within a date range
 export async function GET(req, params) {

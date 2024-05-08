@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/actions/action";
 import { cookies } from "next/headers";
 
+export const dynamic = 'force-dynamic';
+
 // GET API to get all employees clocked in for a particular attendance using the attendance code
 export async function GET(req) {
   try {

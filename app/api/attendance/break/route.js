@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/actions/action";
 import { cookies } from "next/headers";
 
+export const dynamic = 'force-dynamic';
+
 // POST API to start or end a break for an employee
 export async function POST(req) {
     try {

@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/actions/action";
 
+export const dynamic = 'force-dynamic';
+
 // POST API to create a new admin
 export async function POST(req) {
   try {

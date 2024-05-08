@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/actions/action";
 import { cookies } from "next/headers";
 
+export const dynamic = 'force-dynamic';
+
 // POST API to create a new attendance code
 export async function POST(req) {
   try {

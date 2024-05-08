@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/actions/action";
 import { cookies } from "next/headers";
 
+export const dynamic = 'force-dynamic';
+
 // API endpoint to get employee count, admin count, attendance count for today, and appointments count for today
 export async function GET(req) {
   try {
