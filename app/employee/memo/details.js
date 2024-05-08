@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-// import { DeclineRequest } from "./decline";
+import { DeclineRequest } from "./decline";
 
 export const MemoDetails = ({ setViewMemo, memoData, setGData }) => {
   const [approveRequest, setApproveRequest] = useState(false);
@@ -23,7 +23,7 @@ export const MemoDetails = ({ setViewMemo, memoData, setGData }) => {
         const data = {
           memoId: memoData.id,
           status,
-          // declineReason,
+          declineReason,
         };
 
         const response = await fetch("/api/memo", {
@@ -39,22 +39,30 @@ export const MemoDetails = ({ setViewMemo, memoData, setGData }) => {
         }
 
         toast.success(responseData.message);
-        setViewMemo(false);
+
         setGData(true);
+        setViewMemo(false);
       } catch (err) {
         console.log(err);
       }
     };
 
     approveRequest && ApproveOrDeclineRequest("APPROVED");
-    declineRequest && ApproveOrDeclineRequest("DECLINED");
+    confirmDecline && ApproveOrDeclineRequest("DECLINED");
   }, [approveRequest, declineRequest]);
 
   return (
     <div
       className={`${styles.container} flex items-center justify-center pt-12`}
     >
-      {/* {declineRequest && <DeclineRequest setDeclineRequest={setDeclineRequest} setConfirmDecline={setConfirmDecline} declineReason={declineReason} setDeclineReason={setDeclineReason} /> } */}
+      {declineRequest && (
+        <DeclineRequest
+          setDeclineRequest={setDeclineRequest}
+          setConfirmDecline={setConfirmDecline}
+          declineReason={declineReason}
+          setDeclineReason={setDeclineReason}
+        />
+      )}
       <div className="w-full max-w-2xl mx-auto bg-gray-50 rounded-t shadow p-6 h-full">
         <div className="flex justify-between mb-5">
           <h1 className="font-semibold">Memo</h1>

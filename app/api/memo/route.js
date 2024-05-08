@@ -265,7 +265,7 @@ export async function PUT(req) {
     }
 
     // Parse the request body
-    const { memoId, status } = await req.json();
+    const { memoId, status, declineReason } = await req.json();
 
     // Fetch memo details
     const memo = await prisma.memo.findUnique({
@@ -297,6 +297,7 @@ export async function PUT(req) {
       },
       data: {
         status: status,
+        declineReason
       },
     });
 
@@ -315,7 +316,8 @@ export async function PUT(req) {
     const memoData = {
       title: updatedMemo.title,
       details: updatedMemo.details,
-      createdAt : updatedMemo.createdAt
+      createdAt : updatedMemo.createdAt,
+      declineReason
     };
 
     const sendEmailSenderData = {
