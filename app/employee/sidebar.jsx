@@ -4,6 +4,8 @@ import styles from "./sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { Logout } from "@/components/logout";
 
 export const EmployeeSidebar = ({ setShowSidebar }) => {
   const pathname = usePathname();
@@ -15,8 +17,11 @@ export const EmployeeSidebar = ({ setShowSidebar }) => {
     }
   };
 
+  const [logout,setLogout] = useState(false)
+
   return (
     <div className="bg-blue-700 relative border-2 h-full w-full p-2">
+      {logout && <Logout />}
       <div className="flex w-full overflow-hidden items-center flex-col justify-center mt-3 font-semibold text-gray-700 gap-2">
         <img
           className="w-10 h-10 mr-2 p-2 bg-white rounded-full"
@@ -86,7 +91,7 @@ export const EmployeeSidebar = ({ setShowSidebar }) => {
       </div>
 
       <div className="absolute bottom-0 w-full left-0">
-        <button className="bg-gray-800 w-full flex justify-center items-center gap-2 text-white p-2 hover:bg-gray-600">
+        <button onClick={()=>setLogout(true)} className="bg-gray-800 w-full flex justify-center items-center gap-2 text-white p-2 hover:bg-gray-600">
           <FontAwesomeIcon icon={faSignOut} />
           Log out
         </button>

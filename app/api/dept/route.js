@@ -217,3 +217,67 @@ export async function GET() {
     );
   }
 }
+
+// DELETE API to delete an existing department
+export async function DELETE(req) {
+  try {
+    const hasCookies = cookies().has("access-token");
+
+    if (!hasCookies) {
+      return NextResponse.json(
+        {
+          error:
+            "You're unauthorized to delete an admin, please login to continue.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (hasCookies) {
+      const cookie = cookies().get("access-token");
+
+      if (cookie?.value) {
+        const verificationResult = await verifyToken(cookie.value);
+
+        if (!verificationResult.status) {
+          // Handle invalid token
+          return NextResponse.json(
+            { error: "Your session is expired, please login" },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
+    // Get department id from request parameters
+    const { id } = await req.json();
+
+    // Check if the department exists
+    const existingDepartment = await prisma.departments.findUnique({
+      where: { id: id },
+    });
+
+    if (!existingDepartment) {
+      return NextResponse.json(
+        { error: "Department not found." },
+        { status: 404 }
+      );
+    }
+
+    // Delete the department
+    await prisma.departments.delete({
+      where: { id: id },
+    });
+
+    return NextResponse.json(
+      { message: "Department deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting department:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

@@ -1,34 +1,32 @@
 "use client";
-import {
-  faPlus,
-  faPlusCircle,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NEmployee } from "./nEmplyee";
+import { NAdmin } from "./newAdmin";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { EditEmployee } from "./editEmployee";
-import { DelEmployee } from "./delEmployee";
+import { EditAdmin } from "./editAdmins";
+import { DelAdmin } from "./delAdmin";
 
-export default function Employees() {
-  const [addEmployee, setAddEmployee] = useState(false);
-  const [editEmployee, setEditEmployee] = useState(false);
-  const [empData,setEmpData] = useState()
+export default function Admins() {
+  const [addAdmin, setAddAdmin] = useState(false);
 
-  const [employees, setEmployees] = useState([]);
+  const [admins, setAdmins] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
   const [gData, setGData] = useState(true);
 
-  const [delEmployee,setDelEmployee] = useState(false)
+  const [editAdmin, setEditAdmin] = useState(false);
+
+  const [adminData, setAdminData] = useState();
+
+  const [delAdmin, setDelAdmin] = useState(false);
 
   useEffect(() => {
-    const getEmployees = async () => {
+    const getAdmins = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/employee");
+        const response = await fetch("/api/admins");
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -39,7 +37,7 @@ export default function Employees() {
 
         // console.log(responseData.employees)
 
-        setEmployees(responseData.employees);
+        setAdmins(responseData.admins);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -48,17 +46,30 @@ export default function Employees() {
     };
 
     if (gData) {
-      getEmployees();
+      getAdmins();
       setGData(false);
     }
   }, [gData]);
 
   return (
     <div>
-      {addEmployee && <NEmployee setAddEmployee={setAddEmployee} setGData={setGData} />}
-      {editEmployee && <EditEmployee setEditEmployee={setEditEmployee} setGData={setGData} empData={empData} />}
-      {delEmployee && <DelEmployee setDelEmployee={setDelEmployee} setGData={setGData} empId={empData.id} />}
-      <h1>Employees</h1>
+      {addAdmin && <NAdmin setAddAdmin={setAddAdmin} setGData={setGData} />}
+      {editAdmin && (
+        <EditAdmin
+          setEditAdmin={setEditAdmin}
+          setGData={setGData}
+          adminData={adminData}
+        />
+      )}
+      {delAdmin && (
+        <DelAdmin
+          setDelAdmin={setDelAdmin}
+          setGData={setGData}
+          adminId={adminData.id}
+        />
+      )}
+
+      <h1>Admins</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
         <div class="p-4 bg-gray-800 flex justify-between">
@@ -88,17 +99,17 @@ export default function Employees() {
                 type="text"
                 id="table-search"
                 class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Search employees"
+                placeholder="Search admins"
               />
             </div>
           </div>
           <div>
             <button
-              onClick={() => setAddEmployee(true)}
+              onClick={() => setAddAdmin(true)}
               className="p-2 rounded-lg bg-gray-50 flex gap-2 items-center hover:bg-gray-200 text-sm"
             >
               <FontAwesomeIcon icon={faPlusCircle} />
-              New Employee
+              New Admin
             </button>
           </div>
         </div>
@@ -106,19 +117,10 @@ export default function Employees() {
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" class="px-6 py-3">
-                Staff Id
-              </th>
-              <th scope="col" class="px-6 py-3">
                 Name
               </th>
               <th scope="col" class="px-6 py-3">
                 Email
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Department
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Contact
               </th>
               <th scope="col" class="px-6 py-3">
                 Action
@@ -128,43 +130,36 @@ export default function Employees() {
           <tbody>
             {loading ? (
               <tr class="bg-white border-b hover:bg-gray-50">
-                <td colSpan={6} class="px-6 py-4 text-center">
+                <td colSpan={3} class="px-6 py-4 text-center">
                   <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                 </td>
               </tr>
-            ) : employees.length > 0 ? (
-              employees.map((employee) => (
+            ) : admins.length > 0 ? (
+              admins.map((admin) => (
                 <tr class="bg-white border-b hover:bg-gray-50">
                   <th
                     scope="row"
                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                   >
-                    {employee.staffid}
+                    {admin.name}
                   </th>
-                  <td class="px-6 py-4">
-                    {employee.fname} {employee.lname}
-                  </td>
-                  <td class="px-6 py-4">
-                    {employee.email}
-                  </td>
-                  <td class="px-6 py-4">{employee.deptId}</td>
-                  <td class="px-6 py-4">{employee.contact}</td>
+                  <td class="px-6 py-4">{admin.email}</td>
                   <td class="px-6 py-4">
                     <span
-                    onClick={()=>{
-                      setEmpData(employee)
-                      setEditEmployee(true)
-                    }}
+                      onClick={() => {
+                        setAdminData(admin);
+                        setEditAdmin(true);
+                      }}
                       class="font-medium text-blue-600 hover:underline mr-2 cursor-pointer"
                     >
                       Edit
                     </span>
                     <span
-                    onClick={()=>{
-                      setEmpData(employee)
-                      setDelEmployee(true)
+                     onClick={() => {
+                      setAdminData(admin);
+                      setDelAdmin(true);
                     }}
-                      class="font-medium text-red-600 hover:underline cursor-pointer"
+                      class="font-medium hover:underline text-red-600 hover:underline cursor-pointer"
                     >
                       Delete
                     </span>
@@ -173,8 +168,8 @@ export default function Employees() {
               ))
             ) : (
               <tr class="bg-white border-b hover:bg-gray-50">
-                <td colSpan={5} class="px-6 py-4 text-center">
-                  No employees found
+                <td colSpan={3} class="px-6 py-4 text-center">
+                  No admins found
                 </td>
               </tr>
             )}

@@ -23,7 +23,7 @@ model employees {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  department    departments    @relation(fields: [deptId], references: [id])
+  department    departments    @relation(fields: [deptId], references: [id], onDelete: Cascade)
   attendance    attendance[]
   appointment   appointments[]
   sentMemos     Memo[]         @relation("MemoSender")
@@ -64,7 +64,7 @@ model attendance {
   updatedAt        DateTime  @updatedAt
 
   // Define relation to employees model
-  employee       employees      @relation(fields: [employeeId], references: [id])
+  employee       employees      @relation(fields: [employeeId], references: [id],onDelete: Cascade)
   AttendanceCode attendanceCode @relation(fields: [AttendanceCodeId], references: [id])
 }
 
@@ -94,7 +94,7 @@ model appointments {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 
-  employee employees @relation(fields: [employeeId], references: [id])
+  employee employees @relation(fields: [employeeId], references: [id],onDelete: Cascade)
 }
 
 model Memo {
@@ -107,8 +107,8 @@ model Memo {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
-  recipient employees @relation("MemoRecipient", fields: [recipientId], references: [id])
-  sender    employees @relation("MemoSender", fields: [senderId], references: [id])
+  recipient employees @relation("MemoRecipient", fields: [recipientId], references: [id],onDelete: Cascade)
+  sender    employees @relation("MemoSender", fields: [senderId], references: [id],onDelete: Cascade)
 }
 
 // Define the AppointmentStatus enum

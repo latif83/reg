@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/actions/action";
 
-// POST API to create a new employee
+// POST API to create a new admin
 export async function POST(req) {
   try {
     const hasCookies = cookies().has("access-token");
@@ -16,8 +16,7 @@ export async function POST(req) {
     if (!hasCookies) {
       return NextResponse.json(
         {
-          error:
-            "You're unauthorized to create a department, please login to continue.",
+          error: "You're unauthorized, please login to continue.",
         },
         { status: 400 }
       );
@@ -44,18 +43,13 @@ export async function POST(req) {
     }
 
     // Parse the request body
-    let { fname, lname, email, contact, staffid, address, deptId } =
-      await req.json();
+    let { name, email } = await req.json();
 
-    fname = fname.trim();
-    lname = lname.trim();
+    name = name.trim();
     email = email.trim();
-    contact = contact.trim();
-    staffid = staffid.trim();
-    address = address.trim();
 
     // Check if email is unique
-    const existingEmail = await prisma.employees.findFirst({
+    const existingEmail = await prisma.admins.findFirst({
       where: {
         email: {
           equals: email,
@@ -71,38 +65,16 @@ export async function POST(req) {
       );
     }
 
-    // Check if staff ID is unique
-    const existingStaffId = await prisma.employees.findFirst({
-      where: {
-        staffid: {
-          equals: staffid,
-          mode: "insensitive", // Case-insensitive comparison
-        },
-      },
-    });
-
-    if (existingStaffId) {
-      return NextResponse.json(
-        { error: "Staff ID already exists." },
-        { status: 400 }
-      );
-    }
-
-    const newEmployee = await prisma.employees.create({
+    const newAdmin = await prisma.admins.create({
       data: {
-        fname,
-        lname,
+        name,
         email,
-        address,
-        contact,
-        deptId,
-        staffid,
         password: "password@123",
       },
     });
 
     return NextResponse.json(
-      { message: "Employee added successfully" },
+      { message: "Admin added successfully" },
       { status: 201 }
     );
   } catch (error) {
@@ -114,8 +86,7 @@ export async function POST(req) {
   }
 }
 
-
-// PUT API to edit an existing employee
+// PUT API to edit an existing admin
 export async function PUT(req) {
   try {
     const hasCookies = cookies().has("access-token");
@@ -125,7 +96,7 @@ export async function PUT(req) {
       return NextResponse.json(
         {
           error:
-            "You're unauthorized to edit an employee, please login to continue.",
+            "You're unauthorized to edit an admin, please login to continue.",
         },
         { status: 400 }
       );
@@ -152,31 +123,27 @@ export async function PUT(req) {
     }
 
     // Parse the request body
-    let { id, fname, lname, email, contact, staffid, address, deptId } =
+    let { id, name , email } =
       await req.json();
 
-    fname = fname.trim();
-    lname = lname.trim();
+    name = name.trim();
     email = email.trim();
-    contact = contact.trim();
-    staffid = staffid.trim();
-    address = address.trim();
 
-    // Check if the employee exists
-    const existingEmployee = await prisma.employees.findUnique({
+    // Check if the admin exists
+    const existingAdmin = await prisma.admins.findUnique({
       where: { id: id },
     });
 
-    if (!existingEmployee) {
+    if (!existingAdmin) {
       return NextResponse.json(
-        { error: "Employee not found." },
+        { error: "Admin not found." },
         { status: 404 }
       );
     }
 
     // Check if email is unique
-    if (email !== existingEmployee.email) {
-      const existingEmail = await prisma.employees.findFirst({
+    if (email !== existingAdmin.email) {
+      const existingEmail = await prisma.admins.findFirst({
         where: {
           email: {
             equals: email,
@@ -193,41 +160,17 @@ export async function PUT(req) {
       }
     }
 
-    // Check if staff ID is unique
-    if (staffid !== existingEmployee.staffid) {
-      const existingStaffId = await prisma.employees.findFirst({
-        where: {
-          staffid: {
-            equals: staffid,
-            mode: "insensitive", // Case-insensitive comparison
-          },
-        },
-      });
-
-      if (existingStaffId) {
-        return NextResponse.json(
-          { error: "Staff ID already exists." },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Update the employee
-    const updatedEmployee = await prisma.employees.update({
+    // Update the admin
+    const updatedAdmin = await prisma.admins.update({
       where: { id: id },
       data: {
-        fname,
-        lname,
+        name,
         email,
-        address,
-        contact,
-        deptId,
-        staffid,
       },
     });
 
     return NextResponse.json(
-      { message: "Employee updated successfully" },
+      { message: "Admin updated successfully" },
       { status: 200 }
     );
   } catch (error) {
@@ -239,20 +182,53 @@ export async function PUT(req) {
   }
 }
 
-
-
-export async function GET() {
+export async function GET(req) {
   try {
-    const employees = await prisma.employees.findMany({
+    const hasCookies = cookies().has("access-token");
+    let user = {};
+
+    if (!hasCookies) {
+      return NextResponse.json(
+        {
+          error: "Please login to continue.",
+          redirect: true,
+        },
+        { status: 400 }
+      );
+    }
+
+    if (hasCookies) {
+      const cookie = cookies().get("access-token");
+
+      if (cookie?.value) {
+        const verificationResult = await verifyToken(cookie.value);
+
+        if (verificationResult.status) {
+          user = verificationResult.decodedToken;
+          // Now you have the user details, you can use them as needed
+          //   console.log("User details:", user);
+        } else {
+          // Handle invalid token
+          return NextResponse.json(
+            { error: "Your session is expired, please login", redirect: true },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
+    const admins = await prisma.admins.findMany({
       orderBy: {
-        createdAt: "desc",
+        createdAt: "desc", // You can adjust the sorting as per your requirement
       },
     });
 
+    // console.log(admins)
+
     return NextResponse.json(
       {
-        message: "Employees retrieved successfully!",
-        employees,
+        message: "Admin data retrieved successfully!",
+        admins,
       },
       { status: 200 }
     );
@@ -267,7 +243,8 @@ export async function GET() {
   }
 }
 
-// DELETE API to delete an existing employee
+
+// DELETE API to delete an existing admin
 export async function DELETE(req) {
   try {
     const hasCookies = cookies().has("access-token");
@@ -298,32 +275,32 @@ export async function DELETE(req) {
       }
     }
 
-    // Get employee id from request parameters
+    // Get admin id from request parameters
     const { id } = await req.json();
 
-    // Check if the employee exists
-    const existingEmployee = await prisma.employees.findUnique({
+    // Check if the admin exists
+    const existingAdmin = await prisma.admins.findUnique({
       where: { id: id },
     });
 
-    if (!existingEmployee) {
+    if (!existingAdmin) {
       return NextResponse.json(
-        { error: "Employee not found." },
+        { error: "Admin not found." },
         { status: 404 }
       );
     }
 
-    // Delete the employee
-    await prisma.employees.delete({
+    // Delete the admin
+    await prisma.admins.delete({
       where: { id: id },
     });
 
     return NextResponse.json(
-      { message: "Employee deleted successfully" },
+      { message: "Admin deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting employee:", error);
+    console.error("Error deleting admin:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

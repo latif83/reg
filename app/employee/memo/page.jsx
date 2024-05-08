@@ -18,11 +18,14 @@ export default function Memo() {
 
   const [memoData,setMemoData] = useState()
 
+  const [filterDate,setFilterDate] = useState("")
+
   useEffect(() => {
     const getMemos = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/memo");
+        const filters = `?filterDate=${filterDate}`;
+        const response = await fetch(`/api/memo${filters}`);
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -82,11 +85,11 @@ export default function Memo() {
                 id="date-input"
                 className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Select Date"
-                // value={filterDate}
-                // onChange={(e) => {
-                //   setFilterDate(e.target.value);
-                //   setGData(true);
-                // }}
+                value={filterDate}
+                onChange={(e) => {
+                  setFilterDate(e.target.value);
+                  setGData(true);
+                }}
               />
             </div>
           </div>

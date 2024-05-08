@@ -4,6 +4,7 @@ import { EmployeeSidebar } from "./sidebar";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import styles from "./layout.module.css";
+import { useRouter } from "next/navigation";
 
 export default function RootLayout({ children }) {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -12,8 +13,38 @@ export default function RootLayout({ children }) {
     setShowSidebar((state) => !state);
   };
 
+  const [employeeInfo, setEmployeeInfo] = useState({});
+  const router = useRouter();
+
   useEffect(() => {
     const width = window.innerWidth;
+
+    const getEmployeeInfo = async () => {
+      try {
+        // setEmpLoading(true);
+        const empId = "unkwown";
+        const response = await fetch(`/api/employee/${empId}`);
+        const responseData = await response.json();
+        if (!response.ok) {
+          toast.error(responseData.error);
+          if (responseData?.redirect) {
+            router.push("/");
+          }
+          return;
+        }
+
+        setEmployeeInfo(responseData.employee);
+
+        // console.log(responseData.employee);
+
+        // setEmpLoading(false);
+      } catch (err) {
+        console.log(err);
+        toast.error("Error retrieving data, please try again later!");
+      }
+    };
+
+    getEmployeeInfo()
 
     if (width < 965) {
       setShowSidebar(false);
@@ -49,7 +80,7 @@ export default function RootLayout({ children }) {
           </div>
           <div>
             <h1>Good Morning,</h1>
-            <p>Abdul-Latif Mohammed</p>
+            <p>{employeeInfo.fname} {employeeInfo.lname}</p>
           </div>
         </div>
         <div style={{ height: "90%" }} className="p-3 overflow-y-auto">

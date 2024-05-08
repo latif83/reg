@@ -3,6 +3,7 @@ import {
   faCalendarCheck,
   faClipboardUser,
   faSignOut,
+  faSpinner,
   faUser,
   faUserTie,
   faUsers,
@@ -11,10 +12,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
 import styles from "./layout.module.css";
+import { Logout } from "@/components/logout";
 
 export default function AdminDashboard() {
   // State to hold the current time
   const [currentTime, setCurrentTime] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const [summary, setSummary] = useState({});
+
+  const [logout, setLogout] = useState(false);
 
   // Function to update the current time
   const updateTime = () => {
@@ -25,6 +33,27 @@ export default function AdminDashboard() {
 
   // useEffect hook to update the time initially and start the interval
   useEffect(() => {
+    const getSummary = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/summary`);
+        const responseData = await response.json();
+        if (!response.ok) {
+          toast.error(responseData.error);
+          return;
+        }
+
+        setSummary(responseData.summary);
+
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        toast.error("Error retrieving data, please try again later!");
+      }
+    };
+
+    getSummary();
+
     updateTime(); // Update the time initially
     // Set up interval to update time every second (1000ms)
     const interval = setInterval(updateTime, 1000);
@@ -34,6 +63,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
+      {logout && <Logout />}
       <div className="border-b pb-3 flex sm:flex-row flex-col justify-between items-center">
         <h1 className="font-bold text-xl">Admin Dashboard</h1>
         <div>
@@ -57,7 +87,13 @@ export default function AdminDashboard() {
 
               <h1>Total Employees</h1>
             </div>
-            <div>20</div>
+            <div>
+              {loading ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                summary.employeeCount
+              )}
+            </div>
           </div>
           <div className="rounded p-3 bg-black text-white relative">
             <div className="flex gap-2">
@@ -72,7 +108,13 @@ export default function AdminDashboard() {
 
               <h1>Admins</h1>
             </div>
-            <div>5</div>
+            <div>
+              {loading ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                summary.adminCount
+              )}
+            </div>
           </div>
           <div className="rounded p-3 bg-black text-white relative">
             <div className="flex gap-2">
@@ -87,7 +129,13 @@ export default function AdminDashboard() {
 
               <h1>Today's Appointments</h1>
             </div>
-            <div>5</div>
+            <div>
+              {loading ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                summary.appointmentCount
+              )}
+            </div>
           </div>
           <div className="rounded p-3 bg-black text-white relative">
             <div className="flex gap-2">
@@ -102,16 +150,22 @@ export default function AdminDashboard() {
 
               <h1>Today's Attendance</h1>
             </div>
-            <div>10</div>
+            <div>
+              {loading ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                summary.attendanceCount
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="mt-12 flex justify-center">
         <button
-          // onClick={() => {
-          //   setLogout(true);
-          // }}
+          onClick={() => {
+            setLogout(true);
+          }}
           className="p-2 rounded-lg bg-red-700 hover:bg-red-600 text-white"
         >
           <FontAwesomeIcon className="mr-2" icon={faSignOut} />

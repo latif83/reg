@@ -64,8 +64,10 @@ export const AdminSidebar = ({ setShowSidebar }) => {
           Departments
         </Link>
         <Link
-          className="p-2 rounded-lg hover:font-semibold"
-          href="/"
+          className={`p-2 rounded-lg hover:font-semibold ${
+            pathname.includes("/admin/admins") && "bg-gray-200"
+          }`}
+          href="/admin/admins"
           onClick={toggleSidebar}
         >
           Admins

@@ -5,6 +5,7 @@ import { NDept } from "./nDept";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { EditDept } from "./editDept";
+import { DelDepartment } from "./delDepartment";
 
 export default function Departments() {
   const [addDept, setAddDept] = useState(false);
@@ -15,6 +16,8 @@ export default function Departments() {
   const [deptData, setDeptData] = useState();
 
   const [gData, setGData] = useState(true);
+
+  const [delDept, setDelDept] = useState(false);
 
   useEffect(() => {
     const getDepartments = async () => {
@@ -51,6 +54,13 @@ export default function Departments() {
           setEditDept={setEditDept}
           setGData={setGData}
           deptData={deptData}
+        />
+      )}
+      {delDept && (
+        <DelDepartment
+          setDelDept={setDelDept}
+          setGData={setGData}
+          deptId={deptData.id}
         />
       )}
       <h1>Departments</h1>
@@ -135,12 +145,15 @@ export default function Departments() {
                     >
                       Edit
                     </span>
-                    <a
-                      href="#"
-                      class="font-medium text-red-600 hover:underline"
+                    <span
+                      onClick={() => {
+                        setDeptData(dept);
+                        setDelDept(true);
+                      }}
+                      class="font-medium text-red-600 hover:underline cursor-pointer"
                     >
                       Delete
-                    </a>
+                    </span>
                   </td>
                 </tr>
               ))
