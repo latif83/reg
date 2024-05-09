@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/actions/action";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // POST API to create a new employee
 export async function POST(req) {
@@ -115,7 +115,6 @@ export async function POST(req) {
     );
   }
 }
-
 
 // PUT API to edit an existing employee
 export async function PUT(req) {
@@ -241,11 +240,12 @@ export async function PUT(req) {
   }
 }
 
-
-
 export async function GET() {
   try {
     const employees = await prisma.employees.findMany({
+      include: {
+        department: true,
+      },
       orderBy: {
         createdAt: "desc",
       },

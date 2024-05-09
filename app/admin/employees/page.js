@@ -28,7 +28,7 @@ export default function Employees() {
     const getEmployees = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/employee");
+        const response = await fetch("/api/employee"); 
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -147,7 +147,7 @@ export default function Employees() {
                   <td class="px-6 py-4">
                     {employee.email}
                   </td>
-                  <td class="px-6 py-4">{employee.deptId}</td>
+                  <td class="px-6 py-4">{employee.department.name}</td>
                   <td class="px-6 py-4">{employee.contact}</td>
                   <td class="px-6 py-4">
                     <span
@@ -173,7 +173,7 @@ export default function Employees() {
               ))
             ) : (
               <tr class="bg-white border-b hover:bg-gray-50">
-                <td colSpan={5} class="px-6 py-4 text-center">
+                <td colSpan={6} class="px-6 py-4 text-center">
                   No employees found
                 </td>
               </tr>
