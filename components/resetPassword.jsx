@@ -12,51 +12,64 @@ export const ResetPassword = ({ setResetPassword }) => {
     const [password, setPassword] = useState("")
     const [cpassword, setCPassword] = useState("")
 
-    const [isPasswordVisible,setIsPasswordVisible] = useState(false)
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
     const handleCheckboxChange = (event) => {
         setIsPasswordVisible(event.target.checked);
     };
 
+    const [resetRequest, setResetRequest] = useState(false)
+
     const submit = async () => {
 
-        setLoading(true)
-
-        try {
-
-            if (password != cpassword) {
-                toast.error("Passwords do not match!")
-                return
-            }
-
-            if (password == "password@123") {
-                toast.error("New password cannot be same as previous password!")
-                return
-            }
-
-            const response = await fetch('/api/users/resetpassword', { method: 'POST', body: JSON.stringify({ password }) })
-
-            const responseData = await response.json()
-
-            if (!response.ok) {
-                toast.error(responseData.error)
-                return
-            }
-
-            toast.success(responseData.message)
-
-            setResetPassword(false)
-
-        }
-        catch (err) {
-            console.log(err)
-        } finally {
-            setLoading(false)
-        }
+        setResetRequest(true)
 
     }
 
-    useEffect(() => { }, [loading])
+    useEffect(() => {
+
+        const sendResetPasswordRequest = async () => {
+            setLoading(true)
+
+            try {
+
+                if (password != cpassword) {
+                    toast.error("Passwords do not match!")
+                    return
+                }
+
+                if (password == "password@123") {
+                    toast.error("New password cannot be same as previous password!")
+                    return
+                }
+
+                const response = await fetch('/api/users/resetpassword', { method: 'POST', body: JSON.stringify({ password }) })
+
+                const responseData = await response.json()
+
+                if (!response.ok) {
+                    toast.error(responseData.error)
+                    return
+                }
+
+                toast.success(responseData.message)
+
+                setResetPassword(false)
+
+            }
+            catch (err) {
+                console.log(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (resetRequest) {
+            sendResetPasswordRequest()
+            setResetRequest(false)
+        }
+
+    }, [resetRequest])
 
     return (
         <div className={`${styles.container} pt-12`}>
@@ -108,10 +121,10 @@ export const ResetPassword = ({ setResetPassword }) => {
                     </div>
 
                     <div className="mb-5">
-                                <input id="checked-checkbox" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500. focus:ring-2" checked={isPasswordVisible}
-                                    onChange={handleCheckboxChange} />
-                                <label for="checked-checkbox" className="ms-2 text-sm font-medium text-gray-900">Show Password</label>
-                            </div>
+                        <input id="checked-checkbox" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500. focus:ring-2" checked={isPasswordVisible}
+                            onChange={handleCheckboxChange} />
+                        <label for="checked-checkbox" className="ms-2 text-sm font-medium text-gray-900">Show Password</label>
+                    </div>
 
                     <div className="flex justify-end">
                         <button
