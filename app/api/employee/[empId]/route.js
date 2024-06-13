@@ -58,6 +58,7 @@ export async function GET(req, params) {
         staffid: true,
         contact: true,
         email: true,
+        password : true,
         department: {
           select: {
             name: true,

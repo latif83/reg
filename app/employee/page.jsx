@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { EditProfile } from "./editProfile";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ResetPassword } from "@/components/resetPassword";
 
 export default function EmployeeDashboard() {
   // State to hold the current time
@@ -31,6 +32,8 @@ export default function EmployeeDashboard() {
   const [empLoading, setEmpLoading] = useState(false);
   const [gData, setGData] = useState(true);
 
+  const [resetPassword,setResetPassword] = useState(false)
+
   const router = useRouter();
 
   useEffect(() => {
@@ -51,6 +54,10 @@ export default function EmployeeDashboard() {
         }
 
         setEmployeeInfo(responseData.employee);
+
+        if(responseData.employee.password == "password@123"){
+          setResetPassword(true)
+        }
 
         // console.log(responseData.employee);
 
@@ -78,6 +85,8 @@ export default function EmployeeDashboard() {
           setGData={setGData}
         />
       )}
+      {/* reset password! */}
+      {resetPassword && <ResetPassword setResetPassword={setResetPassword} />}
       <div className="border-b pb-3 flex sm:flex-row flex-col justify-between items-center">
         <h1 className="font-bold text-xl">Employee Dashboard</h1>
         <div>
