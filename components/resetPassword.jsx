@@ -12,6 +12,12 @@ export const ResetPassword = ({ setResetPassword }) => {
     const [password, setPassword] = useState("")
     const [cpassword, setCPassword] = useState("")
 
+    const [isPasswordVisible,setIsPasswordVisible] = useState(false)
+
+    const handleCheckboxChange = (event) => {
+        setIsPasswordVisible(event.target.checked);
+    };
+
     const submit = async () => {
 
         setLoading(true)
@@ -65,7 +71,7 @@ export const ResetPassword = ({ setResetPassword }) => {
                 <form action={submit}>
                     <div className="relative z-0 w-full group mb-5">
                         <input
-                            type="password"
+                            type={isPasswordVisible ? "text" : "password"}
                             name="nPassword"
                             id="nPassword"
                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -84,7 +90,7 @@ export const ResetPassword = ({ setResetPassword }) => {
 
                     <div className="relative z-0 w-full group mb-5">
                         <input
-                            type="password"
+                            type={isPasswordVisible ? "text" : "password"}
                             name="nPassword"
                             id="nPassword"
                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -100,6 +106,12 @@ export const ResetPassword = ({ setResetPassword }) => {
                             Confirm Password
                         </label>
                     </div>
+
+                    <div className="mb-5">
+                                <input id="checked-checkbox" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500. focus:ring-2" checked={isPasswordVisible}
+                                    onChange={handleCheckboxChange} />
+                                <label for="checked-checkbox" className="ms-2 text-sm font-medium text-gray-900">Show Password</label>
+                            </div>
 
                     <div className="flex justify-end">
                         <button
