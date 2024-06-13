@@ -16,8 +16,20 @@ export default function RootLayout({ children }) {
   const [employeeInfo, setEmployeeInfo] = useState({});
   const router = useRouter();
 
+  const [greeting,setGreeting] = useState("")
+
   useEffect(() => {
     const width = window.innerWidth;
+
+    const hours = new Date().getHours();
+
+    if (hours >= 0 && hours < 12) {
+      setGreeting("Good Morning");
+    } else if (hours >= 12 && hours < 18) {
+      setGreeting("Good Afternoon");
+    } else {
+      setGreeting("Good Evening");
+    }
 
     const getEmployeeInfo = async () => {
       try {
@@ -79,7 +91,7 @@ export default function RootLayout({ children }) {
             />
           </div>
           <div>
-            <h1>Good Morning,</h1>
+            <h1>{greeting},</h1>
             <p>{employeeInfo.fname} {employeeInfo.lname}</p>
           </div>
         </div>

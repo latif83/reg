@@ -26,7 +26,7 @@ export const AdminSidebar = ({ setShowSidebar }) => {
         </span>
       </div>
 
-      <div className="mt-12 flex flex-col gap-4">
+      <div className="mt-12 flex flex-col gap-3">
         <Link
           className={`p-2 rounded-lg hover:font-semibold ${
             pathname == "/admin" && "bg-gray-200"

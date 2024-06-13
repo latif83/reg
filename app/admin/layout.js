@@ -18,10 +18,22 @@ export default function RootLayout({ children }) {
   const [adminInfo, setAdminInfo] = useState({});
   const router = useRouter();
 
-  const [resetPassword,setResetPassword] = useState(false)
+  const [resetPassword, setResetPassword] = useState(false);
+
+  const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
     const width = window.innerWidth;
+
+    const hours = new Date().getHours();
+
+    if (hours >= 0 && hours < 12) {
+      setGreeting("Good Morning");
+    } else if (hours >= 12 && hours < 18) {
+      setGreeting("Good Afternoon");
+    } else {
+      setGreeting("Good Evening");
+    }
 
     const getAdminInfo = async () => {
       try {
@@ -36,8 +48,8 @@ export default function RootLayout({ children }) {
         }
 
         setAdminInfo(responseData.admin);
-        if(responseData.admin.password == "password@123"){
-          setResetPassword(true)
+        if (responseData.admin.password == "password@123") {
+          setResetPassword(true);
         }
 
         // console.log(responseData.employee);
@@ -81,14 +93,17 @@ export default function RootLayout({ children }) {
             />
           </div>
           <div>
-            <h1>Good Morning,</h1>
+            <h1>{greeting},</h1>
             <p>{adminInfo?.name}</p>
           </div>
         </div>
         <div className="p-3">
           {/* reset password! */}
-      {resetPassword && <ResetPassword setResetPassword={setResetPassword} role={'admin'} />}
-          {children}</div>
+          {resetPassword && (
+            <ResetPassword setResetPassword={setResetPassword} role={"admin"} />
+          )}
+          {children}
+        </div>
       </div>
     </div>
   );
