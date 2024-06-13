@@ -86,7 +86,7 @@ export default function EmployeeDashboard() {
         />
       )}
       {/* reset password! */}
-      {resetPassword && <ResetPassword setResetPassword={setResetPassword} />}
+      {resetPassword && <ResetPassword setResetPassword={setResetPassword} role={'employee'} />}
       <div className="border-b pb-3 flex sm:flex-row flex-col justify-between items-center">
         <h1 className="font-bold text-xl">Employee Dashboard</h1>
         <div>

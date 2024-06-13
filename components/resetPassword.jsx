@@ -5,7 +5,7 @@ import styles from './resetPassword.module.css'
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
-export const ResetPassword = ({ setResetPassword }) => {
+export const ResetPassword = ({ setResetPassword, role }) => {
 
     const [loading, setLoading] = useState(false)
 
@@ -28,7 +28,7 @@ export const ResetPassword = ({ setResetPassword }) => {
 
     useEffect(() => {
 
-        const sendResetPasswordRequest = async () => {
+        const sendResetPasswordRequestEmployee = async () => {
             setLoading(true)
 
             try {
@@ -43,7 +43,7 @@ export const ResetPassword = ({ setResetPassword }) => {
                     return
                 }
 
-                const response = await fetch('/api/users/resetpassword', { method: 'POST', body: JSON.stringify({ password }) })
+                const response = await fetch('/api/users/resetpassword/employees', { method: 'POST', body: JSON.stringify({ password }) })
 
                 const responseData = await response.json()
 
@@ -64,8 +64,47 @@ export const ResetPassword = ({ setResetPassword }) => {
             }
         }
 
-        if (resetRequest) {
-            sendResetPasswordRequest()
+        const sendResetPasswordRequestAdmin = async () => {
+            setLoading(true)
+
+            try {
+
+                if (password != cpassword) {
+                    toast.error("Passwords do not match!")
+                    return
+                }
+
+                if (password == "password@123") {
+                    toast.error("New password cannot be same as previous password!")
+                    return
+                }
+
+                const response = await fetch('/api/users/resetpassword/admins', { method: 'POST', body: JSON.stringify({ password }) })
+
+                const responseData = await response.json()
+
+                if (!response.ok) {
+                    toast.error(responseData.error)
+                    return
+                }
+
+                toast.success(responseData.message)
+
+                setResetPassword(false)
+
+            }
+            catch (err) {
+                console.log(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (resetRequest && role == "employee") {
+            sendResetPasswordRequestEmployee()
+            setResetRequest(false)
+        } else if (resetRequest && role == "admin") {
+            sendResetPasswordRequestAdmin()
             setResetRequest(false)
         }
 

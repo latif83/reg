@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import styles from "./layout.module.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { ResetPassword } from "@/components/resetPassword";
 
 export default function RootLayout({ children }) {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -16,6 +17,8 @@ export default function RootLayout({ children }) {
 
   const [adminInfo, setAdminInfo] = useState({});
   const router = useRouter();
+
+  const [resetPassword,setResetPassword] = useState(false)
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -33,6 +36,9 @@ export default function RootLayout({ children }) {
         }
 
         setAdminInfo(responseData.admin);
+        if(responseData.admin.password == "password@123"){
+          setResetPassword(true)
+        }
 
         // console.log(responseData.employee);
 
@@ -79,7 +85,10 @@ export default function RootLayout({ children }) {
             <p>{adminInfo?.name}</p>
           </div>
         </div>
-        <div className="p-3">{children}</div>
+        <div className="p-3">
+          {/* reset password! */}
+      {resetPassword && <ResetPassword setResetPassword={setResetPassword} role={'admin'} />}
+          {children}</div>
       </div>
     </div>
   );
