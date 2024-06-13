@@ -4,7 +4,7 @@ import styles from "./details.module.css";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { DeclineRequest } from "./decline";
+// import { DeclineRequest } from "./decline";
 
 export const AppointmentDetails = ({ setViewAppointment, appointmentData,setGData }) => {
 
@@ -54,7 +54,7 @@ export const AppointmentDetails = ({ setViewAppointment, appointmentData,setGDat
 
   return (
     <div className={`${styles.container} flex items-center justify-center`}>
-      {declineRequest && <DeclineRequest setDeclineRequest={setDeclineRequest} setConfirmDecline={setConfirmDecline} declineReason={declineReason} setDeclineReason={setDeclineReason} /> }
+      {/* {declineRequest && <DeclineRequest setDeclineRequest={setDeclineRequest} setConfirmDecline={setConfirmDecline} declineReason={declineReason} setDeclineReason={setDeclineReason} /> } */}
       <div className="w-full max-w-4xl mx-auto bg-gray-50 rounded shadow p-6">
         <div className="flex justify-between mb-5">
           <h1 className="font-semibold">Appointment Details</h1>
@@ -109,14 +109,14 @@ export const AppointmentDetails = ({ setViewAppointment, appointmentData,setGDat
           </div>
         </div>
 
-        <div className="mt-5 flex justify-end gap-4">
+        {/* <div className="mt-5 flex justify-end gap-4">
           <button onClick={()=>setDeclineRequest(true)} className="bg-red-700 text-sm hover:bg-red-800 text-white p-2 rounded">
             Cancel Request
           </button>
           <button onClick={()=>setApproveRequest(true)} className="bg-green-700 text-sm hover:bg-green-800 text-white p-2 rounded">
             Approve Request
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

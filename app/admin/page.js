@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 import styles from "./layout.module.css";
 import { Logout } from "@/components/logout";
+import Link from "next/link";
 
 export default function AdminDashboard() {
   // State to hold the current time
@@ -74,7 +75,10 @@ export default function AdminDashboard() {
 
       <div className="mt-5">
         <div className="grid sm:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4">
-          <div className="rounded p-3 bg-black text-white relative">
+          <Link
+            href={"/admin/employees"}
+            className="rounded p-3 bg-black text-white relative cursor-pointer hover:bg-gray-700"
+          >
             <div className="flex gap-2">
               <span className={`${styles.icons}`}>
                 <FontAwesomeIcon
@@ -94,8 +98,11 @@ export default function AdminDashboard() {
                 summary.employeeCount
               )}
             </div>
-          </div>
-          <div className="rounded p-3 bg-black text-white relative">
+          </Link>
+          <Link
+            href={"/admin/admins"}
+            className="rounded p-3 bg-black text-white relative cursor-pointer hover:bg-gray-700"
+          >
             <div className="flex gap-2">
               <span className={`${styles.icons}`}>
                 <FontAwesomeIcon
@@ -115,8 +122,11 @@ export default function AdminDashboard() {
                 summary.adminCount
               )}
             </div>
-          </div>
-          <div className="rounded p-3 bg-black text-white relative">
+          </Link>
+          <Link
+            href={"/admin/appointments"}
+            className="rounded p-3 bg-black text-white relative cursor-pointer hover:bg-gray-700"
+          >
             <div className="flex gap-2">
               <span className={`${styles.icons}`}>
                 <FontAwesomeIcon
@@ -136,8 +146,11 @@ export default function AdminDashboard() {
                 summary.appointmentCount
               )}
             </div>
-          </div>
-          <div className="rounded p-3 bg-black text-white relative">
+          </Link>
+          <Link
+            href={"/admin/attendance"}
+            className="rounded p-3 bg-black text-white relative cursor-pointer hover:bg-gray-700"
+          >
             <div className="flex gap-2">
               <span className={`${styles.icons}`}>
                 <FontAwesomeIcon
@@ -157,7 +170,7 @@ export default function AdminDashboard() {
                 summary.attendanceCount
               )}
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 
