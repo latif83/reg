@@ -5,9 +5,35 @@ import { toast } from "react-toastify";
 export default function SetFingerprint() {
   const [hasFingerprint, setHasFingerprint] = useState(false);
 
+  const [employeeInfo, setEmployeeInfo] = useState({})
+
   useEffect(() => {
+
+    const getEmployeeInfo = async () => {
+      try {
+        const empId = "unkwown";
+        const response = await fetch(`/api/employee/${empId}`);
+        const responseData = await response.json();
+        if (!response.ok) {
+          toast.error(responseData.error);
+
+          return;
+        }
+
+        setEmployeeInfo(responseData.employee);
+
+        console.log(responseData.employee);
+
+      } catch (err) {
+        console.log(err);
+        toast.error("Error retrieving data, please try again later!");
+      }
+    };
+
+    getEmployeeInfo()
+
     // Check if the fingerprint flag is stored in localStorage
-    const fingerprintFlag = localStorage.getItem("hasFingerprint");
+    const fingerprintFlag = localStorage.getItem(employeeInfo.id);
     if (fingerprintFlag === "true") {
       setHasFingerprint(true);
     }
@@ -74,10 +100,10 @@ export default function SetFingerprint() {
 
         // Store the fingerprint flag in localStorage
         localStorage.setItem("hasFingerprint", "true");
-        localStorage.setItem("Fingerprint", JSON.stringify(extractedData));
+        localStorage.setItem(employeeInfo.id, JSON.stringify(extractedData));
 
         setHasFingerprint(true);
-        toast.success("Fingerprint has be setted successfully!");
+        toast.success("Fingerprint has being setted successfully!");
       });
     } catch (err) {
       console.log(err);
@@ -92,7 +118,18 @@ export default function SetFingerprint() {
       <h1 className="text-lg">Set Fingerprint</h1>
       <div className="mt-8">
         {hasFingerprint ? (
-          <p>You have already set up fingerprint authentication.</p>
+          <div>
+            <p>You have already set up fingerprint authentication.</p>
+            <button
+              className="bg-red-600 text-gray-100 p-2 rounded"
+              onClick={() => {
+                localStorage.removeItem(employeeInfo.id)
+                toast.error("Fingerprint / Face ID authentication removed successfully!")
+              }}
+            >
+              Remove fingerprint authentication
+            </button>
+          </div>
         ) : (
           <button
             className="bg-gray-900 text-gray-100 p-2 rounded"
