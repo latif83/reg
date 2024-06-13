@@ -9,7 +9,6 @@ import {
 import { useEffect, useState } from "react";
 import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
 import { toast } from "react-toastify";
-import { QrReader, QrReaderViewFinder } from "reactjs-qr-code-reader";
 import { Scanner } from '@yudiel/react-qr-scanner';
 
 export const QRAuth = ({ setQRAuth, qrAuth, setAuthDone, setFetchData }) => {
