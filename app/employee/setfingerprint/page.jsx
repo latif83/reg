@@ -34,7 +34,7 @@ export default function SetFingerprint() {
 
     // Check if the fingerprint flag is stored in localStorage
     const fingerprintFlag = localStorage.getItem(employeeInfo.id);
-    if (fingerprintFlag === "true") {
+    if (fingerprintFlag) {
       setHasFingerprint(true);
     }
   }, []);
