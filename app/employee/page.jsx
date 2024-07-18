@@ -185,11 +185,11 @@ export default function EmployeeDashboard() {
           </Link>
 
           <Link href="/employee/appointment" className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
-            Book Apointment
+            Book Appointment
           </Link>
 
           <Link href="/employee/appointments" className="shadow-lg p-3 rounded-lg bg-blue-200 cursor-pointer hover:bg-blue-50">
-            View Apointment History
+            View Appointment History
           </Link>
         </div>
       </div>
