@@ -126,6 +126,7 @@ export default function SetFingerprint() {
             <button
               className="bg-red-600 text-gray-100 p-2 rounded"
               onClick={() => {
+                setHasFingerprint(false)
                 localStorage.removeItem(employeeInfo.id)
                 toast.error("Fingerprint / Face ID authentication removed successfully!")
               }}
