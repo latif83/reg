@@ -32,12 +32,15 @@ export default function SetFingerprint() {
 
     getEmployeeInfo()
 
+  }, []);
+
+  useEffect(()=>{
     // Check if the fingerprint flag is stored in localStorage
     const fingerprintFlag = localStorage.getItem(employeeInfo.id);
     if (fingerprintFlag) {
       setHasFingerprint(true);
-    }
-  }, []);
+    } 
+  },[employeeInfo])
 
   const setFingerprint = () => {
     try {
