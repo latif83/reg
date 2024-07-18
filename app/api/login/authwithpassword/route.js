@@ -58,7 +58,7 @@ export async function POST(req) {
     });
 
     // Check if the user exists and if the password matches
-      if (user && (await bcrypt.compare(password, user.password))) {
+      if (user && (await bcrypt.compare(password, checkUser.password))) {
       // Successful login
       return NextResponse.json(
         { message: "Authentication Successful!" },
