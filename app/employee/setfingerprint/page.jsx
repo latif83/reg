@@ -118,11 +118,11 @@ export default function SetFingerprint() {
 
   return (
     <div>
-      <h1 className="text-lg">Set Fingerprint</h1>
+      <h1 className="text-lg">Set Biometric</h1>
       <div className="mt-8">
         {hasFingerprint ? (
           <div>
-            <p>You have already set up fingerprint authentication.</p>
+            <p>You have already set up biometric authentication.</p>
             <button
               className="bg-red-600 text-gray-100 p-2 rounded"
               onClick={() => {
@@ -131,7 +131,7 @@ export default function SetFingerprint() {
                 toast.error("Fingerprint / Face ID authentication removed successfully!")
               }}
             >
-              Remove fingerprint authentication
+              Remove biometric authentication
             </button>
           </div>
         ) : (
@@ -139,7 +139,7 @@ export default function SetFingerprint() {
             className="bg-gray-900 text-gray-100 p-2 rounded"
             onClick={setFingerprint}
           >
-            Set up fingerprint authentication
+            Set up biometric authentication
           </button>
         )}
       </div>

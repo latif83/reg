@@ -79,7 +79,7 @@ export const EmployeeSidebar = ({ setShowSidebar }) => {
           href="/employee/setfingerprint"
           onClick={toggleSidebar}
         >
-          Set Fingerprint
+          Set Biometric
         </Link>
         <Link
           className={`p-2 rounded-lg hover:font-semibold ${
