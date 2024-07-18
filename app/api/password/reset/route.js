@@ -13,7 +13,10 @@ export const dynamic = "force-dynamic";
 export async function POST(req) {
   try {
     // Parse the request body
-    const { email, password } = await req.json();
+    let { email, password } = await req.json();
+    
+    // Hash the password using bcrypt
+    password = await bcrypt.hash(password, 10);
 
     // Convert email to lowercase
     const lowercaseEmail = email.toLowerCase();

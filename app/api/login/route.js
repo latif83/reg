@@ -42,8 +42,7 @@ export async function POST(req) {
     });
 
     // Check if the user exists and if the password matches
-    //   if (user && (await bcrypt.compare(password, user.password))) {
-    if (user && user.password == password) {
+      if (user && (await bcrypt.compare(password, user.password))) {
       // Create a JWT with the user's information
       const token = jwt.sign(
         { userId: user.id, email: user.email, fullName: user.name },

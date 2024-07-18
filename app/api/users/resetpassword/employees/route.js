@@ -46,7 +46,10 @@ export async function POST(req) {
     }
 
     // Parse the request body
-    const { password } = await req.json();
+    let { password } = await req.json();
+
+    // Hash the password using bcrypt
+    password = await bcrypt.hash(password, 10);
 
     // Convert email to lowercase
     const lowercaseEmail = user.email.toLowerCase();

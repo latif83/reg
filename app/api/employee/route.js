@@ -90,6 +90,9 @@ export async function POST(req) {
       );
     }
 
+    // Hash the password using bcrypt
+    const hashedPassword = await bcrypt.hash("password@123", 10);
+
     const newEmployee = await prisma.employees.create({
       data: {
         fname,
@@ -99,7 +102,7 @@ export async function POST(req) {
         contact,
         deptId,
         staffid,
-        password: "password@123",
+        password: hashedPassword,
       },
     });
 
