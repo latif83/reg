@@ -30,8 +30,8 @@ export const EmployeeSidebar = ({ setShowSidebar }) => {
           src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
           alt="logo"
         />
-        <span className={`${styles.marquee} text-gray-200`}>
-          Employee Attendance & Appointment Management System
+        <span className={`${styles.marqueee} text-gray-200`}>
+          SCHEDULE SYNC
         </span>
       </div>
 

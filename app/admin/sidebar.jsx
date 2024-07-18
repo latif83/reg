@@ -22,7 +22,7 @@ export const AdminSidebar = ({ setShowSidebar }) => {
           alt="logo"
         />
         <span className={`${styles.marquee} text-gray-200`}>
-          Employee Attendance & Appointment Management System
+          SCHEDULE SYNC
         </span>
       </div>
 

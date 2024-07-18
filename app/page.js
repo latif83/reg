@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { ForgetPassword } from "@/components/forgetPassword";
 
 export default function Home() {
   const [activeBtn, setActiveBtn] = useState("sign-in");
@@ -64,8 +65,13 @@ export default function Home() {
     }
   }, [sData]);
 
+  const [forgetPassword, setForgetPassword] = useState(false);
+
   return (
     <div style={{ height: "100svh" }} className="relative">
+      {forgetPassword && (
+        <ForgetPassword setForgetPassword={setForgetPassword} />
+      )}
       <div
         className={`bg-blue-700 absolute top-0 left-0 w-full ${styles.banner}`}
         style={{ height: "50%" }}
@@ -81,9 +87,7 @@ export default function Home() {
               src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
               alt="logo"
             />
-            <span className={`${styles.marquee}`}>
-              Employee Attendance & Appointment Management System
-            </span>
+            <span>SCHEDULE SYNC</span>
           </a>
 
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -178,12 +182,12 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <a
-                  href="#"
-                  className="text-sm font-medium text-blue-600 hover:underline"
+                <span
+                  onClick={()=>setForgetPassword(true)}
+                  className="text-sm font-medium text-blue-600 cursor-pointer hover:underline"
                 >
                   Forgot password?
-                </a>
+                </span>
               </div>
               <button
                 type="submit"
