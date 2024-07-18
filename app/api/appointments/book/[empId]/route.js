@@ -81,8 +81,8 @@ export async function POST(req, params) {
           appointmentDate
         ).toLocaleTimeString()}`,
         status: "Pending",
-        user: "latifm8360@gmail.com",
-        pass: "ziez xcek uckf uhyw",
+        user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
         appointmentData: {
           visitorName,
           visitorEmail,
@@ -108,8 +108,8 @@ export async function POST(req, params) {
         appointmentDate
       ).toDateString()} - ${new Date(appointmentDate).toLocaleTimeString()}`,
       status: "Pending",
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
+      user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
       employeeName: `${checkEmployee.fname} ${checkEmployee.lname}`,
       position: checkEmployee.department.name,
       declineReason : ""

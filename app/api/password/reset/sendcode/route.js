@@ -36,8 +36,8 @@ export async function POST(req) {
     }
 
     const sendEmailData = {
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
+      user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
       subject: `Reset your password`,
       to: lowercaseEmail,
       code,

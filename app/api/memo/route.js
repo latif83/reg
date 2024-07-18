@@ -96,8 +96,8 @@ export async function POST(req) {
         newMemo.createdAt
       ).toLocaleTimeString()} )`,
       status: "PENDING",
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
+      user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
       memoData,
     };
 
@@ -110,8 +110,8 @@ export async function POST(req) {
         newMemo.createdAt
       ).toLocaleTimeString()} )`,
       status: "PENDING",
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
+      user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
       memoData,
     };
 
@@ -331,8 +331,8 @@ export async function PUT(req) {
         memoData.createdAt
       ).toLocaleTimeString()} )`,
       status,
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
+      user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
       memoData,
     };
 
@@ -345,8 +345,8 @@ export async function PUT(req) {
         memoData.createdAt
       ).toLocaleTimeString()} )`,
       status,
-      user: "latifm8360@gmail.com",
-      pass: "ziez xcek uckf uhyw",
+      user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
       memoData,
     };
 

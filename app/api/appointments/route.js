@@ -104,8 +104,8 @@ export async function POST(req) {
           appointmentDate
         ).toDateString()} - ${new Date(appointmentDate).toLocaleTimeString()}`,
         status: "Pending",
-        user: "latifm8360@gmail.com",
-        pass: "ziez xcek uckf uhyw",
+        user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
         appointmentData: {
           visitorName,
           visitorEmail,
@@ -130,8 +130,8 @@ export async function POST(req) {
           appointmentDate
         ).toDateString()} - ${new Date(appointmentDate).toLocaleTimeString()}`,
         status: "Pending",
-        user: "latifm8360@gmail.com",
-        pass: "ziez xcek uckf uhyw",
+        user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
         employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
         position: employeeDetails.department.name,
         declineReason : ""
@@ -333,8 +333,8 @@ export async function PUT(req, params) {
           updatedAppointment.appointmentDate
         ).toLocaleTimeString()}`,
         status,
-        user: "latifm8360@gmail.com",
-        pass: "ziez xcek uckf uhyw",
+        user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
         appointmentData: {
           visitorName: updatedAppointment.visitorName,
           visitorEmail: updatedAppointment.visitorEmail,
@@ -361,8 +361,8 @@ export async function PUT(req, params) {
           updatedAppointment.appointmentDate
         ).toLocaleTimeString()}`,
         status,
-        user: "latifm8360@gmail.com",
-        pass: "ziez xcek uckf uhyw",
+        user: "info.schedulesync@gmail.com",
+      pass: "smka fhur zqgw agde",
         employeeName: `${employeeDetails.fname} ${employeeDetails.lname}`,
         position: employeeDetails.department.name,
         declineReason,
