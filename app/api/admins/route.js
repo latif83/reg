@@ -189,13 +189,13 @@ export async function PUT(req) {
 
 export async function GET(req) {
   try {
-    const hasCookies = cookies().has("access-token");
+    const hasCookies = cookies().has('access-token');
     let user = {};
 
     if (!hasCookies) {
       return NextResponse.json(
         {
-          error: "Please login to continue.",
+          error: 'Please login to continue.',
           redirect: true,
         },
         { status: 400 }
@@ -203,7 +203,7 @@ export async function GET(req) {
     }
 
     if (hasCookies) {
-      const cookie = cookies().get("access-token");
+      const cookie = cookies().get('access-token');
 
       if (cookie?.value) {
         const verificationResult = await verifyToken(cookie.value);
@@ -211,20 +211,38 @@ export async function GET(req) {
         if (verificationResult.status) {
           user = verificationResult.decodedToken;
           // Now you have the user details, you can use them as needed
-          //   console.log("User details:", user);
+          // console.log("User details:", user);
         } else {
           // Handle invalid token
           return NextResponse.json(
-            { error: "Your session is expired, please login", redirect: true },
+            { error: 'Your session is expired, please login', redirect: true },
             { status: 400 }
           );
         }
       }
     }
 
+    // Extract the search keyword from the query parameters
+    const url = new URL(req.url);
+    const searchKeyword = url.searchParams.get('search') || ''; // Default to empty string if not provided
+
+    // Construct the filter condition for the search
+    const filterCondition = searchKeyword
+      ? {
+          where: {
+            name: {
+              contains: searchKeyword, // Case-insensitive search
+              mode: 'insensitive',     // Make search case-insensitive
+            },
+          },
+        }
+      : {};
+
+    // Retrieve admins from the database with optional filtering
     const admins = await prisma.admins.findMany({
+      ...filterCondition,
       orderBy: {
-        createdAt: "desc", // You can adjust the sorting as per your requirement
+        createdAt: 'desc', // You can adjust the sorting as per your requirement
       },
     });
 
@@ -232,7 +250,7 @@ export async function GET(req) {
 
     return NextResponse.json(
       {
-        message: "Admin data retrieved successfully!",
+        message: 'Admin data retrieved successfully!',
         admins,
       },
       { status: 200 }
@@ -241,9 +259,9 @@ export async function GET(req) {
     console.log(err);
     return NextResponse.json(
       {
-        error: "Internal Server Error",
+        error: 'Internal Server Error',
       },
-      { status: 400 }
+      { status: 500 } // Use 500 for internal server errors
     );
   }
 }

@@ -47,9 +47,6 @@ export async function GET(req, params) {
     const { searchParams } = new URL(req.url);
     const start = searchParams.get("start");
     const end = searchParams.get("end");
-
-    console.log(start)
-    console.log(end)
   
       // Define filters based on query parameters
       let filters = { employeeId: employeeId };

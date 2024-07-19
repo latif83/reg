@@ -243,20 +243,48 @@ export async function PUT(req) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
+    // Extract the search keyword from the query parameters
+    const url = new URL(request.url);
+    const searchKeyword = url.searchParams.get('search') || '';  // Default to empty string if not provided
+
+    // Construct the filter condition for the search
+    const filterCondition = searchKeyword
+      ? {
+          where: {
+            OR: [
+              {
+                fname: {
+                  contains: searchKeyword,  // Case-insensitive search
+                  mode: 'insensitive',      // Make search case-insensitive
+                },
+              },
+              {
+                lname: {
+                  contains: searchKeyword,  // Case-insensitive search
+                  mode: 'insensitive',      // Make search case-insensitive
+                },
+              },
+            ],
+          },
+        }
+      : {};
+
+    // Retrieve employees from the database with optional filtering and include department
     const employees = await prisma.employees.findMany({
+      ...filterCondition,
       include: {
         department: true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
 
     return NextResponse.json(
       {
-        message: "Employees retrieved successfully!",
+        message: 'Employees retrieved successfully!',
         employees,
       },
       { status: 200 }
@@ -265,9 +293,9 @@ export async function GET() {
     console.log(err);
     return NextResponse.json(
       {
-        error: "Internal Server Error",
+        error: 'Internal Server Error',
       },
-      { status: 400 }
+      { status: 500 }
     );
   }
 }

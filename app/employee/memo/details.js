@@ -103,7 +103,7 @@ export const MemoDetails = ({ setViewMemo, memoData, setGData }) => {
         </div>
 
         <h3 className="font-semibold text-2xs border-b border-black mb-1">
-          <span className="bg-black text-white p-1 rounded">Reciepient :</span>
+          <span className="bg-black text-white p-1 rounded">Recipient :</span>
         </h3>
 
         <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mb-5">

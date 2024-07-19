@@ -22,11 +22,13 @@ export default function Admins() {
 
   const [delAdmin, setDelAdmin] = useState(false);
 
+  const [searchKeyword,setSearchKeyword] = useState("")
+
   useEffect(() => {
     const getAdmins = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/admins");
+        const response = await fetch(`/api/admins?search=${searchKeyword}`);
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -45,11 +47,11 @@ export default function Admins() {
       }
     };
 
-    if (gData) {
+    if (gData || searchKeyword || !searchKeyword) {
       getAdmins();
       setGData(false);
     }
-  }, [gData]);
+  }, [gData,searchKeyword]);
 
   return (
     <div>
@@ -100,6 +102,7 @@ export default function Admins() {
                 id="table-search"
                 class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Search admins"
+                onInput={(e)=>setSearchKeyword(e.target.value)}
               />
             </div>
           </div>

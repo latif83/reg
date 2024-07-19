@@ -24,11 +24,13 @@ export default function Employees() {
 
   const [delEmployee,setDelEmployee] = useState(false)
 
+  const [searchKeyword,setSearchKeyword] = useState("")
+
   useEffect(() => {
     const getEmployees = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/employee"); 
+        const response = await fetch(`/api/employee?search=${searchKeyword}`); 
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -47,11 +49,11 @@ export default function Employees() {
       }
     };
 
-    if (gData) {
+    if (gData || searchKeyword || !searchKeyword) {
       getEmployees();
       setGData(false);
     }
-  }, [gData]);
+  }, [gData,searchKeyword]);
 
   return (
     <div>
@@ -89,6 +91,7 @@ export default function Employees() {
                 id="table-search"
                 class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Search employees"
+                onInput={(e)=>setSearchKeyword(e.target.value)}
               />
             </div>
           </div>

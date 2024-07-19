@@ -169,7 +169,7 @@ export const PassKey = ({ setAuthenticate, setAuthDone }) => {
                 <FontAwesomeIcon icon={faFingerprint} />
               </button>
               <p className="text-xs font-semibold">
-                Authenticate with fingerprint
+                Biometric Authentication
               </p>
             </div>
           </div>

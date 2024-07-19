@@ -19,11 +19,13 @@ export default function Departments() {
 
   const [delDept, setDelDept] = useState(false);
 
+  const [searchKeyword,setSearchKeyword] = useState('')
+
   useEffect(() => {
     const getDepartments = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/dept");
+        const response = await fetch(`/api/dept?search=${searchKeyword}`);
         const responseData = await response.json();
         if (!response.ok) {
           toast.error(responseData.error);
@@ -40,11 +42,11 @@ export default function Departments() {
       }
     };
 
-    if (gData) {
+    if (gData || searchKeyword || !searchKeyword) {
       getDepartments();
       setGData(false);
     }
-  }, [gData]);
+  }, [gData,searchKeyword]);
 
   return (
     <div>
@@ -94,6 +96,7 @@ export default function Departments() {
                 id="table-search"
                 class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Search department"
+                onInput={(e)=>setSearchKeyword(e.target.value)}
               />
             </div>
           </div>

@@ -76,8 +76,8 @@ export default function Attendance() {
       <h1>Attendance</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-        <div class="p-4 flex justify-between">
-          <div>
+        <div class="p-4 flex justify-end">
+          {/* <div>
             <label for="table-search" class="sr-only">
               Search
             </label>
@@ -103,10 +103,10 @@ export default function Attendance() {
                 type="text"
                 id="table-search"
                 class="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Search employees"
+                placeholder="Search attendance code"
               />
             </div>
-          </div>
+          </div> */}
           <div>
             <button
               onClick={() => setCreateCode(true)}

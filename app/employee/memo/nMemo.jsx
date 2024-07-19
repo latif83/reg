@@ -173,7 +173,7 @@ export const NewMemo = ({ setNMemo, setGData }) => {
           </div>
 
           <p className="mb-5 text-lg rounded bg-gray-600 text-white p-2">
-            Memo Reciepient:
+            Memo Recipient:
           </p>
 
           <div className="relative z-0 w-full group mb-5">

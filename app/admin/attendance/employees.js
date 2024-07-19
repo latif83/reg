@@ -81,7 +81,18 @@ export const EmployeesAttendance = ({ setViewAttendance, attendanceCode }) => {
                   </td>
                 </tr>
               ) : employees.length > 0 ? (
-                employees.map((data) => (
+                employees.map((data) => {
+
+                  const timeIn12HourFormat = (time)=>{
+                    return new Date(time).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: true,
+                    });
+                  }
+
+                  return(
                   <tr class="bg-white border-b hover:bg-gray-50">
                     <th
                       scope="row"
@@ -92,10 +103,10 @@ export const EmployeesAttendance = ({ setViewAttendance, attendanceCode }) => {
                     <td class="px-6 py-4 text-gray-900">
                       {data.department}
                     </td>
-                    <td class="px-6 py-4">{new Date(data.clockIn).toLocaleTimeString()}</td>
-                    <td class="px-6 py-4">06:30 PM</td>
+                    <td class="px-6 py-4">{timeIn12HourFormat(data.clockIn)}</td>
+                    <td class="px-6 py-4">{timeIn12HourFormat(data.clockOut)}</td>
                   </tr>
-                ))
+                )})
               ) : (
                 <tr class="bg-white border-b hover:bg-gray-50">
                   <td colSpan={4} class="px-6 py-4 text-center">

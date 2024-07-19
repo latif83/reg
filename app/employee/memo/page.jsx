@@ -138,7 +138,7 @@ export default function Memo() {
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                   >
                     <span
-                      className={`text-xs font-medium text-gray-100 p-2 rounded ${
+                      className={`text-xs font-medium p-2 rounded ${
                         memo.customTag == "Sent"
                           ? "text-blue-700"
                           : "text-green-700"
