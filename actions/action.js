@@ -1,5 +1,6 @@
 "use server"
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 export const verifyToken = (token) => {
     try{
@@ -10,5 +11,17 @@ export const verifyToken = (token) => {
         // cookies().delete('access-token')
         // console.log(err)
         return {status:false}
+    }
+}
+
+export const IsReset = async (password)=>{
+    try{
+        const checkPass = await bcrypt.compare("password@123", password)
+
+        return checkPass ? true : false
+    }
+    catch(err){
+        console.log(err)
+        return false
     }
 }

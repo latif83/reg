@@ -7,6 +7,7 @@ import { EditProfile } from "./editProfile";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ResetPassword } from "@/components/resetPassword";
+import { IsReset } from "@/actions/action";
 
 export default function EmployeeDashboard() {
   // State to hold the current time
@@ -55,7 +56,7 @@ export default function EmployeeDashboard() {
 
         setEmployeeInfo(responseData.employee);
 
-        if(responseData.employee.password == "password@123"){
+        if(await IsReset(responseData.employee.password)){ 
           setResetPassword(true)
         }
 
