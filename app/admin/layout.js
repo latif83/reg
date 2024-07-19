@@ -79,10 +79,10 @@ export default function RootLayout({ children }) {
         <AdminSidebar setShowSidebar={setShowSidebar} />
       </div>
       <div
-        style={{ width: "100%" }}
-        className={`h-full border-2 ${styles.mainContainer}`}
+        style={{ width: "100%" , height: "100%"}}
+        className={`h-full border-2 ${styles.mainContainer} flex flex-col`}
       >
-        <div className="bg-blue-700 shadow p-3 flex justify-between items-center text-gray-100">
+        <div style={{ height: "10%" }} className="bg-blue-700 shadow p-3 flex justify-between items-center text-gray-100">
           <div>
             <FontAwesomeIcon
               onClick={toggleSidebar}
@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
             <p>{adminInfo?.name}</p>
           </div>
         </div>
-        <div className="p-3">
+        <div style={{ height: "90%" }} className="p-3 overflow-y-auto">
           {/* reset password! */}
           {resetPassword && (
             <ResetPassword setResetPassword={setResetPassword} role={"admin"} />

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NewMemo } from "./nMemo";
 import { useEffect, useState } from "react";
 import { MemoDetails } from "./details";
+import { toast } from "react-toastify";
 
 export default function Memo() {
   const [nMemo, setNMemo] = useState(false);
